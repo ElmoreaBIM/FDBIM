@@ -1,0 +1,41 @@
+{
+  "name": "electron-quick-start",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "npm run build-js && npm run start-electron",
+    "start-electron": "electron main.js -s ENVIRONMENT=web,webview",
+    "build": "npm run build-js && npm run build-electron",
+    "watch": "rollup -c -w",
+    "build-electron": "electron-builder",
+    "build-js": "rollup -c && npm run setup-bundle",
+    "setup-bundle": "node src/setup/setup.js"
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.0.6",
+    "electron": "^16.0.0",
+    "electron-builder": "^22.14.5"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "install": "^0.13.0",
+    "jquery": "^3.6.0",
+    "materialize": "^1.0.0",
+    "materialize-css": "^1.0.0-rc.2",
+    "npm": "^8.3.0",
+    "web-ifc-viewer": "^1.0.105",
+    "xml2js": "^0.4.23"
+  }
+}

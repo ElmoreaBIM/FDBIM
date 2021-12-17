@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+<!--    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">-->
+    <link href="styles.css" rel="stylesheet">
+    <link rel="stylesheet" href="icon/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+    
+     <!--Import Google Icon Font-->
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+     <!--Import materialize.css-->
+     <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+     <!--Let browser know website is optimized for mobile-->
+     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+     <title>Final Docs BIM is other application by bimlearning.es </title>
+  </head>
+  <body>
+    <nav>
+      <div id="MenuSuperior">
+
+        <a href="#" class="brand-logo right"> <img id="LogoHead" class="LogoHead" src="LOGO_FINAL_DOCS.png"/>inal Docs  BIM</a>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+      
+          <li><a id="BotonCargaIFC"><i class="material-icons left">open_in_browser</i>Load IFC</a></li>
+          <li><a id="BotonCargaCarpeta"><i id="IconoCarpeta" class="material-icons left">create_new_folder</i>Folder Docs</a></li>
+          <!-- <li><a href="sass.html"><span class="lnr lnr-apartment"></span></a></li> -->
+          
+         
+        </ul>
+        <div>
+          <input id="file-input" type="file" >
+          <input id="input-folder" type="file" name="fileList" webkitdirectory false />
+
+
+          
+          </div>
+      </div>
+      <!-- <div class="nav-wrapper red accent-4"> -->
+      
+      </div>
+  </nav>
+
+
+    <div>
+      <div id="PanelCentral">
+        <div id="viewer-container"> 
+       
+
+          <div id="Familia" class="Categoria"></div>
+          <div id="Tipo" class="Categoria"></div> 
+  
+          <div id="BotonSelect" class="BotonesCentrales">
+              <img id="BotonGafas" class="ImagenBotonCentral" src="./icon/select.png"/>
+          </div>
+    
+          <div id="BotonVer" class="BotonesCentrales">
+              <img id="BotonEjes" class="ImagenBotonCentral" src="./icon/eye.png"/>
+          </div>
+          
+          <div id="BotonPlanoCorte" class="BotonesCentrales">
+              <img id="BotonVerTodo" class="ImagenBotonCentral" src="./icon/section.png"/>
+          </div>
+          
+          <div id="BotonCuarto" class="BotonesCentrales">
+              <img id="" class="ImagenBotonCentral" src="./icon/gafas2.png"/>
+          </div>
+        </div>
+        <div id="sidebar_right">
+          <div id="BarraIconoDerecho">
+            <span id="BotonEsconderMostrarBarraLateralDcha" class="lnr lnr-chevron-right"></span>
+          </div>
+        <div id="ContenedorBotonesDcha">
+                      <div id="Separador"class="Separador"></div>
+                      <div id="Repositorio" class="button">Repository</div>
+                      
+                      <span id="ValorRepositorio" class="ValorRepositorio">Empty</span>
+                      
+                      <div id="PrimeraCaja">
+                              
+                        <div id="loader-button" class="button-container">
+                            <div class="button">Select</div>
+                        </div>
+                        <div>
+                          <div id="franja">
+                            <span class="TextoFijo">Instance: </span>
+                            <span id="ValorIdEjemplar" class="Valores">Empty</span>
+                            <span class="TextoFijo">Type: </span>
+                            <span id="ValorIdTipo" class="Valores">Empty</span>
+                            <!-- <span class="TextoFijo">Type:</span>
+                            <span id="ValorIdTipo" class="Valores">Empty</span> -->
+                          </div>
+                                                    
+                            
+                        </div>
+                    </div>  
+                    <!-- //MODELOS -->
+                    <div id="Separador"class="Separador"></div>
+                    <div id="EncabezadoModelos" class= "Encabezado">
+
+                        <span id="FlechaModelos" class="lnr lnr-chevron-down"></span>
+                    Models</div>
+                    <div id="Separador1"class="Separador"></div>
+                    <div id="PanelArbolModelos" class="three-menu"></div>
+                    <div id="Separador"class="Separador"></div>
+                  <!-- PROPIEDADES -->
+                    <div id="EncabezadoPropiedades" class="Encabezado">
+                        <span id="FlechaPropiedades" class="lnr lnr-chevron-down"></span>
+                        Properties</div>
+                    <div id="Separador"class="Separador"></div>
+                    <div id="PanelPropiedades" class="three-menu">
+                    </div>
+
+                    <div id="Separador"class="Separador"></div>
+                    
+                    
+
+
+
+
+          </div>
+         
+
+
+
+
+
+
+
+
+          
+        </div>
+      </div>
+      <div id="PanelInf">
+        <div id=CabeceraDocumentos> 
+
+          <span id="BotonSubirBajarTabla" class="lnr lnr-chevron-up"></span>
+          <span id="BotonOcultarMostrar" class="lnr lnr-menu"></span>
+          
+          <div id="BotonDocumentos" class="BotonesSeleccionDocumento">
+             <!-- <i class="Small material-icons">description</i> -->
+             <i class="lnr lnr-file-empty"></i> 
+          </div>
+         
+  
+  
+          <div id="BotonEnsayos" class="BotonesSeleccionDocumento">
+            <!-- <i class="Small material-icons">beenhere</i> -->
+            <i class="lnr lnr-heart-pulse"></i>
+          </div>
+        
+  
+  
+  
+  
+  
+          <div id="BotonRevisiones" class="BotonesSeleccionDocumento">
+          <i class="lnr lnr-construction"></i>
+          
+          </div>
+         
+  
+  
+  
+        </div>
+        <div id="viewer-tabla">
+        
+  
+             <!-- tabla -->
+             <div id="TablaDocumentos" class="collection">
+              <a href="#!" id="ContenedorTabla" class="collection-item">
+                <span class="badge" data-badge-caption="">
+                
+                    <i class="material-icons">folder_open</i>
+                    <i class="material-icons">remove_red_eye</i>
+                   </span>
+                 </span>Alan
+              </a>
+              <a href="#!" class="collection-item"><span class="new badge">4</span>Alan1</a>
+              <a href="#!" class="collection-item">Alan2</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan3</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan4</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan5</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan6</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan7</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan8</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan9</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan10</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan11</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan12</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan13</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan14</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan15</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan16</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan17</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan18</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan19</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan20</a>
+              <a href="#!" class="collection-item"><span class="badge">14</span>Alan21</a>
+            </div>
+  
+  
+  
+        </div> </div>
+      
+     </div>
+     
+     <script src="MisMetodos.js"></script>
+     <script src="MisObjetos.js"></script>
+     
+     <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
+    <script src="dist/bundle.js"></script>
+  </body>
+</html>
