@@ -46,13 +46,12 @@ const viewer = AÑADIR_EL_VISOR_IFC();
 LeerUltimoRepo();
 AÑADE_EVENTO_AL_BOTON_SELECCIONAR_CARPETA_REPOSITORIO();
 SELECCION_REPOSITORIO_CARPETAS();
-
 AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO();
 IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR();
-
+AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
 AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE();
 AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO();
-AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
+AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO();
 AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
 AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES();
 
@@ -132,90 +131,75 @@ else
 }
 
 }
+function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
+  container.ondblclick = async () => {
+    const found = await viewer.IFC.pickIfcItem(true);
+    if (found === null || found === undefined)
+      return;
 
-
-
-//SELECCIONAR ELEMENTO
-container.ondblclick= async ()=>{
-  const found=  await viewer.IFC.pickIfcItem(true);
-  if(found===null|| found===undefined) return;
-
-  const plano=AÑADIR_PLANO_DE_CORTE();
-   LimpiarTabla(Tabla);
-   
-
-  
-
-//MOSTRAMOS PROPIEDADES
-
-
-  // console.log("El elemento seleccionado es :",found);
-  //PROPIEDADES DE EJEMPLAR
-  const props= await viewer.IFC.getProperties(found.modelID,found.id,true);
-   console.log("Propiedades del elemento:",props);
-   console.log("Familia=",props.Name);
-  //ID EJEMPLAR DE REVIT
-  const IdRevit=props.Tag.value;
-  // console.log("ID de Revit: ",IdRevit);
-  document.getElementById("ValorIdEjemplar").innerHTML=IdRevit;
-  //ID TIPO DE REVIT
-  const IdTipoRevit=props.type[0].Tag.value;
-  console.log("Propiedades de tipo= "+props.type);
-  // console.log("ID tipo de Revit: ",IdTipoRevit);
+    const plano = AÑADIR_PLANO_DE_CORTE();
+    LimpiarTabla(Tabla);
 
 
 
 
- 
+    //MOSTRAMOS PROPIEDADES
+    // console.log("El elemento seleccionado es :",found);
+    //PROPIEDADES DE EJEMPLAR
+    const props = await viewer.IFC.getProperties(found.modelID, found.id, true);
+    console.log("Propiedades del elemento:", props);
+    console.log("Familia=", props.Name);
+    //ID EJEMPLAR DE REVIT
+    const IdRevit = props.Tag.value;
+    // console.log("ID de Revit: ",IdRevit);
+    document.getElementById("ValorIdEjemplar").innerHTML = IdRevit;
+    //ID TIPO DE REVIT
+    const IdTipoRevit = props.type[0].Tag.value;
+    console.log("Propiedades de tipo= " + props.type);
+    // console.log("ID tipo de Revit: ",IdTipoRevit);
+    document.getElementById("ValorIdTipo").innerHTML = IdTipoRevit;
+    //Mostrar familia y tipo
+    let FamiliaYTipo = props.Name;
+    console.log("FamiliaYTipo", FamiliaYTipo);
+    FamiliaYTipo = DecodeIFCString(FamiliaYTipo.value);
+    const ListaSeparada = FamiliaYTipo.split(':');
+    const Familia = ListaSeparada[0];
+    const Tipo = ListaSeparada[1];
+    CajetinFamilia.style.visibility = "visible";
+    CajetinTipo.style.visibility = "visible";
+    CajetinFamilia.innerHTML = Familia;
+    CajetinTipo.innerHTML = Tipo;
 
-  document.getElementById("ValorIdTipo").innerHTML=IdTipoRevit ;
-  //Mostrar familia y tipo
 
-  let FamiliaYTipo=props.Name;
-  console.log("FamiliaYTipo",FamiliaYTipo);
-  FamiliaYTipo=DecodeIFCString(FamiliaYTipo.value);
-  const ListaSeparada= FamiliaYTipo.split(':');
-  const Familia = ListaSeparada[0];
-  const Tipo=ListaSeparada[1];
-  CajetinFamilia.style.visibility="visible";
-  CajetinTipo.style.visibility="visible";
-  CajetinFamilia.innerHTML=Familia;
-  CajetinTipo.innerHTML=Tipo;
-  
-
-  //Abrimos paneles de modelos y de propiedades
-  
-  PliegaDespliegaPanelModelos(PanelMod,EstadoPlegadoModelos);
-  PliegaDespliegaPanelProp(PanelPropip,EstadoPlegadoProp);
+    //Abrimos paneles de modelos y de propiedades
+    PliegaDespliegaPanelModelos(PanelMod, EstadoPlegadoModelos);
+    PliegaDespliegaPanelProp(PanelPropip, EstadoPlegadoProp);
 
 
 
-  //PROPIEDADES DE TIPO
+    //PROPIEDADES DE TIPO
+    updatePropertyMenu(props);
+    //MOSTRAMOS ARRIBA LOS CAJETINES DE FAMILIA Y TIPO
+    CajetinFamilia.visibility = "visible";
+    CajetinTipo.visibility = "visible";
+    //AHORA VAMOS A MANDAR AL MAIN LOS DATOS
+    if (Repositorio == null) {
+      alert("Debes elegir la carpeta de repositorio de los archivos para poder visualizarlos, antes de seleccionar un elemento");
+      return;
+    }
 
-  updatePropertyMenu(props);
-  //MOSTRAMOS ARRIBA LOS CAJETINES DE FAMILIA Y TIPO
-  CajetinFamilia.visibility="visible";
-  CajetinTipo.visibility="visible";
-//AHORA VAMOS A MANDAR AL MAIN LOS DATOS
-if(Repositorio==null)
-{
-  alert("Debes elegir la carpeta de repositorio de los archivos para poder visualizarlos, antes de seleccionar un elemento");
-  return;
+
+    var ES = {
+      Repo: Repositorio,
+      IDTipo: IdTipoRevit,
+      IDEjemplar: IdRevit
+    };
+
+    //  Mandamos el ID del elemento al proceso Main
+    window.api.send("ElementoSeleccionado", ES);
+
+  };
 }
-
-
-  var ES={
-    Repo: Repositorio,
-    IDTipo:IdTipoRevit,
-    IDEjemplar:IdRevit
-  }
-
- //  Mandamos el ID del elemento al proceso Main
-
- window.api.send("ElementoSeleccionado",ES);
- 
-}
-
 function AÑADIR_PLANO_DE_CORTE() {
   return viewer.addClippingPlane();
 }
@@ -237,12 +221,6 @@ window.api.receive("UltimoRepositorioLeido", (data) => {
   Repositorio=data;
 
 });
-
-
-
-
-
-
 
 function SELECCION_REPOSITORIO_CARPETAS() {
   let Ruta = null;
