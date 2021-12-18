@@ -42,32 +42,21 @@ let ifcCargado;
 let ListaNombresIFCsCargados=[];
 let ListaIfcsCargados=[];
 
-
-
 const viewer = AÑADIR_EL_VISOR_IFC();
-
-
-
-
 LeerUltimoRepo();
 AÑADE_EVENTO_AL_BOTON_SELECCIONAR_CARPETA_REPOSITORIO();
+SELECCION_REPOSITORIO_CARPETAS();
+
 AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO();
 IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR();
+
 AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE();
 AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO();
 AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
 AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
+AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES();
 
-
-
-
-
-
-
-
-
-
-
+//FUNCIONES DEL MODULO
 function AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO() {
   input.addEventListener("change",
 
@@ -92,14 +81,12 @@ function AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO() {
     false
   );
 }
-
 function AÑADIR_EL_VISOR_IFC() {
   const viewer = new IfcViewerAPI({ container, backgroundColor: new Color(255, 255, 255) });
   viewer.addAxes();
   viewer.addGrid();
   return viewer;
 }
-
 function LeerUltimoRepo(){
   window.api.send("DameUltimoRepo","Hola");
 }
@@ -116,15 +103,12 @@ function AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS() {
 
   };
 }
-
 function AÑADE_EVENTO_AL_BOTON_SELECCIONAR_CARPETA_REPOSITORIO() {
   BotonDirectorio.onclick = () => InputCarpeta.click();
 }
-
 function IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR() {
   BotonCargaIFC.onclick = () => input.click();
 }
-
 function AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE() {
   BotonPlanoCorte.onclick = () => {
     viewer.toggleClippingPlanes();
@@ -133,7 +117,6 @@ function AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE() {
 
   };
 }
-
 function CambiarColorBoton(Boton){
 if(BotonPlanoCortePulsado==false)
 {
@@ -157,14 +140,7 @@ container.ondblclick= async ()=>{
   const found=  await viewer.IFC.pickIfcItem(true);
   if(found===null|| found===undefined) return;
 
-  
-  
-
-  
   const plano=AÑADIR_PLANO_DE_CORTE();
-  
-
-  console.log("Este es el elemento seleccionado :",found);
    LimpiarTabla(Tabla);
    
 
@@ -233,16 +209,10 @@ if(Repositorio==null)
     IDTipo:IdTipoRevit,
     IDEjemplar:IdRevit
   }
-  
-
 
  //  Mandamos el ID del elemento al proceso Main
- // window.api.send("toMain",IdTipoRevit);
+
  window.api.send("ElementoSeleccionado",ES);
- 
-
-     
-
  
 }
 
@@ -259,7 +229,6 @@ window.api.receive("DocumentosEncontrados", (data) => {
      
   });
 });
-
 window.api.receive("GUIDDelTipo", (data) => {GUIDDelTipo=data;});
 window.api.receive("UltimoRepositorioLeido", (data) => {
  
@@ -273,37 +242,34 @@ window.api.receive("UltimoRepositorioLeido", (data) => {
 
 
 
-//SELECCION DIRECTRORIO
 
-let Ruta=null;
-InputCarpeta.onchange = (event) =>{
-    
-     const ListaArchivos = event.target.files;
-    
-     DameDirectorioDeArchivo(ListaArchivos[0]);
 
-      const RutaTexto=ListaArchivos[0].path;
-    
-      const Nombre=ListaArchivos[0].name;
-      const SoloCarpeta= RutaTexto.replace(Nombre,"");
-      
+function SELECCION_REPOSITORIO_CARPETAS() {
+  let Ruta = null;
+  InputCarpeta.onchange = (event) => {
 
-      CajetinRepositorio.innerHTML=SoloCarpeta;
-      CajetinRepositorio.style.color="rgb(107,142,35)";
-      
-      
-      const ArchivoXML=ListaArchivos[0];
-      Ruta=ArchivoXML.path;
-      LimpiarTabla(Tabla);
-      Repositorio=SoloCarpeta;
-      window.api.send("UltimoRepositorioAbierto",Repositorio);
-      AñadirDocumentosATabla(SoloCarpeta);
-     
+    const ListaArchivos = event.target.files;
 
-    
+    DameDirectorioDeArchivo(ListaArchivos[0]);
 
-  
-    
+    const RutaTexto = ListaArchivos[0].path;
+
+    const Nombre = ListaArchivos[0].name;
+    const SoloCarpeta = RutaTexto.replace(Nombre, "");
+
+
+    CajetinRepositorio.innerHTML = SoloCarpeta;
+    CajetinRepositorio.style.color = "rgb(107,142,35)";
+
+
+    const ArchivoXML = ListaArchivos[0];
+    Ruta = ArchivoXML.path;
+    LimpiarTabla(Tabla);
+    Repositorio = SoloCarpeta;
+    window.api.send("UltimoRepositorioAbierto", Repositorio);
+    AñadirDocumentosATabla(SoloCarpeta);
+
+  };
 }
 function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
   BotonOcultarTabla.addEventListener('click', () => {
@@ -368,15 +334,12 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
 
   }, true);
 }
-
 function AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO() {
   container.onmousemove = () => {
 
     viewer.IFC.prePickIfcItem();
   };
 }
-
-//AÑADIR IFC CARGADO AL PANEL
 function AñadirIFCAlPanel(NombreIFC, ModeloIFC){
   const root=document.createElement('div');
   root.classList.add('property-root');
@@ -450,7 +413,6 @@ function AñadirIFCAlPanel(NombreIFC, ModeloIFC){
   }, true);
 
 }
-
 function DameDirectorioDeArchivo(file)
 {
     const Ruta=file.path;
@@ -646,14 +608,10 @@ function DameDocumentosDelElemento(Ruta,IDBuscada){
     
     
 }
-
-//Abrimos paneles de modelos y de propiedades
-EstadoPlegadoModelos=false;
-EstadoPlegadoProp=false;
-EncabezadoMod.onclick =()=>{PliegaDespliegaPanelModelos(PanelMod,EstadoPlegadoModelos);}
-EncabezadoProp.onclick =()=>{PliegaDespliegaPanelProp(PanelPropip,EstadoPlegadoProp);}
-
-
+function AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES() {
+  EncabezadoMod.onclick = () => { PliegaDespliegaPanelModelos(PanelMod, EstadoPlegadoModelos); };
+  EncabezadoProp.onclick = () => { PliegaDespliegaPanelProp(PanelPropip, EstadoPlegadoProp); };
+}
 function PliegaDespliegaPanelModelos(Panel,EstadoDesplegado){
  
   const Flecha=document.getElementById("FlechaModelos");
@@ -695,8 +653,6 @@ function PliegaDespliegaPanelProp(Panel,EstadoDesplegado){
       return;
     }
 }
-
-
 function updatePropertyMenu(props) {
 
   const PanelProp=document.getElementById("PanelPropiedades");
@@ -730,8 +686,6 @@ else{
   
 
 }
-
-
 function createPropertyEntry(key, propertyValue)
 {
   
