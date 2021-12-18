@@ -21,8 +21,8 @@ const EncabezadoMod=document.getElementById("EncabezadoModelos");
 const PanelMod=document.getElementById("PanelArbolModelos");
 const EncabezadoProp=document.getElementById("EncabezadoPropiedades");
 const PanelPropip=document.getElementById("PanelPropiedades");
-const CajetinFamilia=document.getElementById("Familia");
-const CajetinTipo=document.getElementById("Tipo");
+const CajetinFamilia= document.getElementById("Familia");
+const CajetinTipo= document.getElementById("Tipo");
 const CajetinRepositorio=document.getElementById("ValorRepositorio");
 const BotonPlanoCorte=document.getElementById("BotonPlanoCorte");
 
@@ -58,13 +58,9 @@ input.addEventListener("change",
     const ifcCargado= await viewer.IFC.loadIfcUrl(ifcURL);
     ifcCargado.name=file.name;//Le ponemos nombre
     ListaIfcsCargados.push(ifcCargado);
-
-   
     PliegaDespliegaPanelModelos(PanelMod,EstadoPlegadoModelos);
     const Lista= await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
-     alert(Lista.length);
-  
-    console.log(ListaIfcsCargados[0]);
+    
   },
 
   false
@@ -169,8 +165,7 @@ container.ondblclick= async ()=>{
 
   document.getElementById("ValorIdTipo").innerHTML=IdTipoRevit ;
   //Mostrar familia y tipo
-  const CajetinFamilia= document.getElementById("Familia");
-  const CajetinTipo= document.getElementById("Tipo");
+
   let FamiliaYTipo=props.Name;
   console.log("FamiliaYTipo",FamiliaYTipo);
   FamiliaYTipo=DecodeIFCString(FamiliaYTipo.value);
@@ -238,11 +233,6 @@ window.api.receive("UltimoRepositorioLeido", (data) => {
   Repositorio=data;
 
 });
-
-
-// const dato=300;
-// // Send a message to the main process
-// window.api.send("toMain", dato);
 
 
 //EVENTOS OCULTAR/MOSTRAR
