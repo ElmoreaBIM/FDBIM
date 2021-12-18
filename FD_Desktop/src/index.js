@@ -55,16 +55,13 @@ input.addEventListener("change",
    
     const file = changed.target.files[0];
     const ifcURL = URL.createObjectURL(file);
-       
-   
     const ifcCargado= await viewer.IFC.loadIfcUrl(ifcURL);
-    console.log("Tipo)=",ifcCargado.type);
+    ifcCargado.name=file.name;//Le ponemos nombre
     ListaIfcsCargados.push(ifcCargado);
 
    
     PliegaDespliegaPanelModelos(PanelMod,EstadoPlegadoModelos);
-    
-     const Lista= await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
+    const Lista= await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
      alert(Lista.length);
   
     console.log(ListaIfcsCargados[0]);
@@ -404,6 +401,10 @@ function AñadirIFCAlPanel(NombreIFC, ModeloIFC){
     if(ListaIfcsCargados[NumeroOrdenDelIFC].visible===false)
     {
      delete(viewer.context.items.pickableIfcModels[NumeroOrdenDelIFC]);
+    }
+    else
+    {
+      viewer.context.items.pickableIfcModels.splice(NumeroOrdenDelIFC, 0, ListaIfcsCargados[NumeroOrdenDelIFC]);
     }
    
       
