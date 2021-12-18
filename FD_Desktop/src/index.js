@@ -54,6 +54,14 @@ input.addEventListener("change",
   async (changed) => {
    
     const file = changed.target.files[0];
+        //SI NO ES UN IFC, AVISAMOS
+ 
+        if(file.name.split('.')[1]!="ifc")
+        {
+         MensajeAlerta();
+         return;
+        }
+    
     const ifcURL = URL.createObjectURL(file);
     const ifcCargado= await viewer.IFC.loadIfcUrl(ifcURL);
     ifcCargado.name=file.name;//Le ponemos nombre
@@ -721,4 +729,10 @@ function createPropertyEntry(key, propertyValue)
   PanelProp.appendChild(root);
 //  GUI.props.appendChild(root);
 
+}
+function MensajeAlerta() {
+  var txt;
+  if (confirm("There has been a problem, are you sure the uploaded file is an IFC?")) {
+    return;
+  }
 }
