@@ -91,7 +91,7 @@ input.onchange = (event) =>{
    ListaNombresIFCsCargados.push(NombreIFCCargado);
    
    AñadirIFCAlPanel(NombreIFCCargado);
-   
+   console.log("PICABLES=",viewer.context.items.pickableIfcModels);
    
 
 }
@@ -399,10 +399,13 @@ function AñadirIFCAlPanel(NombreIFC, ModeloIFC){
     
     
       
-    
-    alert(NumeroOrdenDelIFC);
+
     ListaIfcsCargados[NumeroOrdenDelIFC].visible=!ListaIfcsCargados[NumeroOrdenDelIFC].visible;
-    console.log(viewer.context.items.pickableIfcModels);
+    if(ListaIfcsCargados[NumeroOrdenDelIFC].visible===false)
+    {
+     delete(viewer.context.items.pickableIfcModels[NumeroOrdenDelIFC]);
+    }
+   
       
 
     // const Lista= await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
