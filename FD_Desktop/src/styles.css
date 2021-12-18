@@ -219,7 +219,7 @@ input {
 #sidebar_right {
   z-index: 20;
 
-  position: relative;
+  /* position: relative; */
   background-color: var(--ColorApagado);
   width: 20vw;
   height: 62vh;
@@ -241,6 +241,7 @@ input {
 #ContenedorBotonesDcha {
   width: 100%;
   padding-left: 1vh;
+  padding-right: 40px;
 }
 
 .three-menu {
