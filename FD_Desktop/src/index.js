@@ -42,70 +42,97 @@ let ifcCargado;
 let ListaNombresIFCsCargados=[];
 let ListaIfcsCargados=[];
 
-//AÑADIMOS EL VISOR IFC
 
-const viewer = new IfcViewerAPI({ container,backgroundColor:new Color(255,255,255) });
-viewer.addAxes();
-viewer.addGrid();
-viewer.toggleClippingPlanes();//alterna entre ver o no ver planos de corte
 
-input.addEventListener("change",
+const viewer = AÑADIR_EL_VISOR_IFC();
 
-  async (changed) => {
-   
-    const file = changed.target.files[0];
-        //SI NO ES UN IFC, AVISAMOS
- 
-        if(file.name.split('.')[1]!="ifc")
-        {
-         MensajeAlerta();
-         return;
-        }
-    
-    const ifcURL = URL.createObjectURL(file);
-    const ifcCargado= await viewer.IFC.loadIfcUrl(ifcURL);
-    ifcCargado.name=file.name;//Le ponemos nombre
-    ListaIfcsCargados.push(ifcCargado);
-    PliegaDespliegaPanelModelos(PanelMod,EstadoPlegadoModelos);
-    const Lista= await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
-    
-  },
 
-  false
-);
 
-//LEEMOS EL ULTIMO REPOSITORIO ALMACENADO SI EXISTE
+
 LeerUltimoRepo();
+AÑADE_EVENTO_AL_BOTON_SELECCIONAR_CARPETA_REPOSITORIO();
+AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO();
+IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR();
+AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE();
+AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO();
+AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
+AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
+
+
+
+
+
+
+
+
+
+
+
+function AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO() {
+  input.addEventListener("change",
+
+    async (changed) => {
+
+      const file = changed.target.files[0];
+      //SI NO ES UN IFC, AVISAMOS
+      if (file.name.split('.')[1] != "ifc") {
+        MensajeAlerta();
+        return;
+      }
+
+      const ifcURL = URL.createObjectURL(file);
+      const ifcCargado = await viewer.IFC.loadIfcUrl(ifcURL);
+      ifcCargado.name = file.name; //Le ponemos nombre
+      ListaIfcsCargados.push(ifcCargado);
+      PliegaDespliegaPanelModelos(PanelMod, EstadoPlegadoModelos);
+      const Lista = await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
+
+    },
+
+    false
+  );
+}
+
+function AÑADIR_EL_VISOR_IFC() {
+  const viewer = new IfcViewerAPI({ container, backgroundColor: new Color(255, 255, 255) });
+  viewer.addAxes();
+  viewer.addGrid();
+  return viewer;
+}
+
 function LeerUltimoRepo(){
   window.api.send("DameUltimoRepo","Hola");
 }
+function AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS() {
+  input.onchange = (event) => {
+
+    const NombreIFCCargado = event.target.files[0].name;
+
+    ListaNombresIFCsCargados.push(NombreIFCCargado);
+
+    AñadirIFCAlPanel(NombreIFCCargado);
+    console.log("PICABLES=", viewer.context.items.pickableIfcModels);
 
 
-//AÑADIMOS EL EVENTO AL BOTON DE CARGAR IFC
-BotonCargaIFC.onclick=()=>input.click();
-
-BotonDirectorio.onclick=()=>InputCarpeta.click();
-input.onchange = (event) =>{
-  
-   const NombreIFCCargado = event.target.files[0].name;
-  
-   ListaNombresIFCsCargados.push(NombreIFCCargado);
-   
-   AñadirIFCAlPanel(NombreIFCCargado);
-   console.log("PICABLES=",viewer.context.items.pickableIfcModels);
-   
-
+  };
 }
 
-BotonPlanoCorte.onclick=()=>{
-  viewer.toggleClippingPlanes();
- 
- CambiarColorBoton(BotonPlanoCorte);
- 
+function AÑADE_EVENTO_AL_BOTON_SELECCIONAR_CARPETA_REPOSITORIO() {
+  BotonDirectorio.onclick = () => InputCarpeta.click();
 }
 
+function IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR() {
+  BotonCargaIFC.onclick = () => input.click();
+}
 
+function AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE() {
+  BotonPlanoCorte.onclick = () => {
+    viewer.toggleClippingPlanes();
 
+    CambiarColorBoton(BotonPlanoCorte);
+
+  };
+}
 
 function CambiarColorBoton(Boton){
 if(BotonPlanoCortePulsado==false)
@@ -122,10 +149,8 @@ else
 }
 
 }
-//PREVISUALIZAR ELEMENTOS AL PASAR POR ENCIMA
-container.onmousemove= ()=>{
-  
-  viewer.IFC.prePickIfcItem();}
+
+
 
 //SELECCIONAR ELEMENTO
 container.ondblclick= async ()=>{
@@ -134,14 +159,10 @@ container.ondblclick= async ()=>{
 
   
   
-  const planes = viewer.context.getClippingPlanes();
-  planes.forEach(planoCorte => {
-    console.log("Plano",planoCorte);
-         
-  });
+
   
-  const plano=viewer.addClippingPlane();
-  // console.log("Planos",planes[0]);
+  const plano=AÑADIR_PLANO_DE_CORTE();
+  
 
   console.log("Este es el elemento seleccionado :",found);
    LimpiarTabla(Tabla);
@@ -221,6 +242,12 @@ if(Repositorio==null)
  
 
      
+
+ 
+}
+
+function AÑADIR_PLANO_DE_CORTE() {
+  return viewer.addClippingPlane();
 }
 // Called when message received from main process
 window.api.receive("DocumentosEncontrados", (data) => {
@@ -243,71 +270,7 @@ window.api.receive("UltimoRepositorioLeido", (data) => {
 });
 
 
-//EVENTOS OCULTAR/MOSTRAR
-BotonOcultarTabla.addEventListener('click',()=>{
- 
-  if(TablaVisible===true)
-  {
-    PanelCentral.style.height='84vh';
-    VisorIFC.style.height='84vh';
-    BarraLateralDcha.style.height='84vh';
-    TablaVisible=false;
-  }
-  else{
-   
-    PanelCentral.style.height='62vh';
-    VisorIFC.style.height='62vh';
-    BarraLateralDcha.style.height='62vh';
-    TablaVisible=true;
-  }
-},true);
-BotonSubirTabla.addEventListener('click',()=>{
-  
-  if(VerVisor===true)
-  {
-    BarraLateralDcha.style.visibility='hidden';
-    BotonSubirTabla.className="lnr lnr-chevron-down";
-    VisorIFC.style.height='0vh';
-    PanelCentral.style.height='0vh';
-   
-    BarraLateralDcha.style.height='0vh';
-    
-    ContenedorTabla.style.height='100vh';
-    VerVisor=false;
-  }
-  else{
-    
-    BotonSubirTabla.className="lnr lnr-chevron-up";
-    PanelCentral.style.height='62vh';
-    
-    BarraLateralDcha.style.height='62vh';
-    
-    VisorIFC.style.height='62vh';
-    ContenedorTabla.style.height='24vh';
-    BarraLateralDcha.style.visibility='visible';
-    VerVisor=true;
-  }
-  
-},true);
-BotonMostrarOcultarBarraLateralDerecha.addEventListener('click',()=>{
-  
-  if(VerLateral===true)
-  {
-    BotonMostrarOcultarBarraLateralDerecha.className="lnr lnr-chevron-left";
-    VisorIFC.style.width='98vw';
-    
-    BarraLateralDcha.style.width='2vw';
-    VerLateral=false;
-  }
-  else{
-    BotonMostrarOcultarBarraLateralDerecha.className="lnr lnr-chevron-right";
-    BarraLateralDcha.style.width='20vw';
-    VisorIFC.style.width='80vw';
-    
-    VerLateral=true;
-  }
-  
-},true);
+
 
 
 //SELECCION DIRECTRORIO
@@ -342,6 +305,77 @@ InputCarpeta.onchange = (event) =>{
   
     
 }
+function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
+  BotonOcultarTabla.addEventListener('click', () => {
+
+    if (TablaVisible === true) {
+      PanelCentral.style.height = '84vh';
+      VisorIFC.style.height = '84vh';
+      BarraLateralDcha.style.height = '84vh';
+      TablaVisible = false;
+    }
+    else {
+
+      PanelCentral.style.height = '62vh';
+      VisorIFC.style.height = '62vh';
+      BarraLateralDcha.style.height = '62vh';
+      TablaVisible = true;
+    }
+  }, true);
+  BotonSubirTabla.addEventListener('click', () => {
+
+    if (VerVisor === true) {
+      BarraLateralDcha.style.visibility = 'hidden';
+      BotonSubirTabla.className = "lnr lnr-chevron-down";
+      VisorIFC.style.height = '0vh';
+      PanelCentral.style.height = '0vh';
+
+      BarraLateralDcha.style.height = '0vh';
+
+      ContenedorTabla.style.height = '100vh';
+      VerVisor = false;
+    }
+    else {
+
+      BotonSubirTabla.className = "lnr lnr-chevron-up";
+      PanelCentral.style.height = '62vh';
+
+      BarraLateralDcha.style.height = '62vh';
+
+      VisorIFC.style.height = '62vh';
+      ContenedorTabla.style.height = '24vh';
+      BarraLateralDcha.style.visibility = 'visible';
+      VerVisor = true;
+    }
+
+  }, true);
+  BotonMostrarOcultarBarraLateralDerecha.addEventListener('click', () => {
+
+    if (VerLateral === true) {
+      BotonMostrarOcultarBarraLateralDerecha.className = "lnr lnr-chevron-left";
+      VisorIFC.style.width = '98vw';
+
+      BarraLateralDcha.style.width = '2vw';
+      VerLateral = false;
+    }
+    else {
+      BotonMostrarOcultarBarraLateralDerecha.className = "lnr lnr-chevron-right";
+      BarraLateralDcha.style.width = '20vw';
+      VisorIFC.style.width = '80vw';
+
+      VerLateral = true;
+    }
+
+  }, true);
+}
+
+function AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO() {
+  container.onmousemove = () => {
+
+    viewer.IFC.prePickIfcItem();
+  };
+}
+
 //AÑADIR IFC CARGADO AL PANEL
 function AñadirIFCAlPanel(NombreIFC, ModeloIFC){
   const root=document.createElement('div');
