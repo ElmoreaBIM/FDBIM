@@ -224,6 +224,7 @@ input {
   width: 20vw;
   height: 62vh;
   font-size: 25px;
+  line-height: 0.8;
 
   transition: all 0.8s ease-in-out;
   /* background-color: var(--gris); */
