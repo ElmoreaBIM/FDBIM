@@ -111,17 +111,22 @@ input {
   margin-left: 47rem;
 }
 
-#BotonVer {
+#BotonAñadirPlanoCorte {
   margin-left: 51rem;
 }
 #BotonPlanoCorte {
   margin-left: 55rem;
   align-items: center;
 }
-#BotonCuarto {
+#BotonBorrarPlanosDeCorte {
   margin-left: 59rem;
   align-items: center;
 }
+#BotonCuarto {
+  margin-left: 63rem;
+  align-items: center;
+}
+
 .BotonesSeleccionDocumento {
   /* margin-top: 50rem; */
 

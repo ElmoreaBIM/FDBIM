@@ -24,6 +24,9 @@ const PanelPropip=document.getElementById("PanelPropiedades");
 const CajetinFamilia= document.getElementById("Familia");
 const CajetinTipo= document.getElementById("Tipo");
 const CajetinRepositorio=document.getElementById("ValorRepositorio");
+const BotonSeleccionar=document.getElementById("BotonSelect");
+const BotonAñadirPlanoCorte=document.getElementById("BotonAñadirPlanoCorte");
+const BotonBorrarPlanosDeCorte=document.getElementById("BotonBorrarPlanosDeCorte");
 const BotonPlanoCorte=document.getElementById("BotonPlanoCorte");
 
 
@@ -37,6 +40,7 @@ let Repositorio;
 let GUIDDelTipo;
 
 let BotonPlanoCortePulsado=false;
+let BotonSeleccionarPulsado=false;
 let ifcCargado;
 
 let ListaNombresIFCsCargados=[];
@@ -49,12 +53,50 @@ SELECCION_REPOSITORIO_CARPETAS();
 AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO();
 IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR();
 AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
+AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE();
+AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE();
+AÑADIR_EVENTO_AL_BOTON_SELECCIONAR();
 AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE();
 AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO();
 AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO();
 AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
 AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES();
+ACTIVA_BOTON(BotonSeleccionar);
 
+function AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE(){
+ 
+
+    BotonAñadirPlanoCorte.onclick = () =>  AÑADIR_PLANO_DE_CORTE();
+  
+ 
+}
+function AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE(){
+  BotonBorrarPlanosDeCorte.onclick=()=>{
+ const ListaPlanosCorte= viewer.context.getClippingPlanes();
+
+ ListaPlanosCorte.forEach(Plano => {
+  alert("Hay planos : "+ListaPlanosCorte.length);
+   viewer.context.removeClippingPlane(Plano);
+   viewer.removeAllChildren();
+ });
+
+  }
+}
+function AÑADIR_EVENTO_AL_BOTON_SELECCIONAR(){
+ 
+
+  BotonSeleccionar.onclick = () =>  {
+    if(BotonAñadirPlanoCorte.Tag===true)
+    {
+      DESACTIVA_BOTON(BotonAñadirPlanoCorte);
+      
+    }
+   
+    ACTIVA_BOTON(BotonSeleccionar);
+  }
+
+
+}
 //FUNCIONES DEL MODULO
 function AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO() {
   input.addEventListener("change",
@@ -111,33 +153,66 @@ function IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR() {
 function AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE() {
   BotonPlanoCorte.onclick = () => {
     viewer.toggleClippingPlanes();
+ 
+    if(BotonPlanoCorte.Tag===false || BotonPlanoCorte.Tag ===undefined)
+    {
+           ACTIVA_BOTON(BotonPlanoCorte);
+    }
+    else
 
-    CambiarColorBoton(BotonPlanoCorte);
+    {
+           DESACTIVA_BOTON(BotonPlanoCorte)
 
+    }
   };
 }
-function CambiarColorBoton(Boton){
-if(BotonPlanoCortePulsado==false)
-{
+function ACTIVA_BOTON(Boton){
   
-  Boton.style.background="#da4f12";
-  BotonPlanoCortePulsado=true;
-}
-else
+  if(Boton.Tag===undefined)
+  {
+    Boton.Tag=false;
+  }
+if(Boton.Tag===false)
 {
-  
-  Boton.style.background="#da1239";
-  BotonPlanoCortePulsado=false;
-}
 
+  Boton.style.background="#920c26";
+  Boton.Tag=true;
+  
+}
+}
+function DESACTIVA_BOTON(Boton){
+  
+  if(Boton.Tag===undefined)
+  {
+    Boton.Tag=true;
+  }
+if(Boton.Tag===true)
+{
+
+  Boton.style.background="#da1239";
+  Boton.Tag=false;
+  
+}
 }
 function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
+  
+
+
   container.ondblclick = async () => {
     const found = await viewer.IFC.pickIfcItem(true);
     if (found === null || found === undefined)
       return;
-
+      alert(BotonAñadirPlanoCorte.Tag);
+  if(BotonAñadirPlanoCorte.Tag===true)
+  {
+   
     const plano = AÑADIR_PLANO_DE_CORTE();
+  }
+    
+  
+  
+  
+    
     LimpiarTabla(Tabla);
 
 
@@ -201,7 +276,27 @@ function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
   };
 }
 function AÑADIR_PLANO_DE_CORTE() {
-  return viewer.addClippingPlane();
+  const plano=undefined;
+  if(BotonAñadirPlanoCorte.Tag===false || BotonAñadirPlanoCorte.Tag===undefined)
+  {
+    DESACTIVA_BOTON(BotonSeleccionar);
+    ACTIVA_BOTON(BotonAñadirPlanoCorte);
+  
+  }
+  else
+  {
+    DESACTIVA_BOTON(BotonAñadirPlanoCorte);
+    ACTIVA_BOTON(BotonSeleccionar);
+
+  }
+  if(BotonPlanoCorte.Tag===true)
+  {
+     plano=viewer.addClippingPlane();
+    
+  }
+  return plano;
+ 
+ 
 }
 // Called when message received from main process
 window.api.receive("DocumentosEncontrados", (data) => {
@@ -404,11 +499,8 @@ function LimpiarTabla(Tabla)
     Tabla.textContent = '';
 }
 function AñadirDocumentosATabla(Carpeta)
-{
+{ const CarpetaDocumentos=Carpeta+"DOCUMENTOS_ELEMENTOS";
    
-    const CarpetaDocumentos=Carpeta+"DOCUMENTOS_ELEMENTOS";
-   
- 
     var fs=require('fs');
     var files=fs.readdirSync(CarpetaDocumentos);
        
@@ -466,8 +558,8 @@ function DameDocumentosDelElemento(Ruta,IDBuscada){
       });
   });
    
-  }
-  function AñadirDocumentoATabla(Documento,Ruta){
+}
+function AñadirDocumentoATabla(Documento,Ruta){
     const Tabla=document.getElementById("TablaDocumentos");
     var NuevaFila = document.createElement('a');
     NuevaFila.className='collection-item';
