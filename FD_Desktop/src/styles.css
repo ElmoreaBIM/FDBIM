@@ -129,6 +129,8 @@ input {
 
 .BotonesSeleccionDocumento {
   /* margin-top: 50rem; */
+  display: flex;
+  flex-direction: row;
 
   transition: all 0.8s ease-in-out;
   background-color: #da1239;
@@ -146,15 +148,15 @@ input {
 
   align-items: left;
 }
+
 .BotonesSeleccionDocumento:hover {
   background-color: rgb(109, 2, 34);
-  transition: width 1s;
-
+  transition: width 0.2s;
   cursor: pointer;
-
   width: 10rem;
   transform: translateY(2px);
 }
+
 #TextoInterior {
   visibility: hidden;
 }
@@ -378,4 +380,23 @@ input {
 .lever {
   color: green;
   background-color: indigo;
+}
+.toolTip {
+  background: rgb(109, 2, 34) center left 5px no-repeat;
+  /* border: 2px solid #87cefa;
+  border-radius: 5px;
+  box-shadow: 5px 5px 5px #333; */
+  color: white;
+  font-size: 0.8em;
+  padding: 10px 10px 10px 35px;
+  margin-left: 20px;
+
+  position: absolute;
+  z-index: 100;
+
+  height: 5vh;
+  /* font-size: 20px; */
+
+  border-radius: 2.5rem;
+  /* padding-top: 1vh; */
 }

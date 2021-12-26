@@ -63,6 +63,7 @@ AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
 AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES();
 ACTIVA_BOTON(BotonSeleccionar);
 
+
 function AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE(){
  
 
@@ -76,8 +77,9 @@ function AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE(){
 
  ListaPlanosCorte.forEach(Plano => {
   alert("Hay planos : "+ListaPlanosCorte.length);
+  clip
    viewer.context.removeClippingPlane(Plano);
-   viewer.removeAllChildren();
+   
  });
 
   }
@@ -205,21 +207,13 @@ function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
       alert(BotonAñadirPlanoCorte.Tag);
   if(BotonAñadirPlanoCorte.Tag===true)
   {
-   
-    const plano = AÑADIR_PLANO_DE_CORTE();
+       const plano = AÑADIR_PLANO_DE_CORTE();
+       
   }
     
-  
-  
-  
-    
     LimpiarTabla(Tabla);
-
-
-
-
     //MOSTRAMOS PROPIEDADES
-    // console.log("El elemento seleccionado es :",found);
+  
     //PROPIEDADES DE EJEMPLAR
     const props = await viewer.IFC.getProperties(found.modelID, found.id, true);
     console.log("Propiedades del elemento:", props);
@@ -794,3 +788,5 @@ function MensajeAlerta() {
     return;
   }
 }
+
+

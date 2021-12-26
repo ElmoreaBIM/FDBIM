@@ -19,6 +19,8 @@
      <title>Final Docs BIM is other application by bimlearning.es </title>
   </head>
   <body>
+    <script src="MisMetodos.js"></script>
+
     <nav>
       <div id="MenuSuperior">
 
@@ -138,35 +140,22 @@
         </div>
       </div>
       <div id="PanelInf">
-        <div id=CabeceraDocumentos> 
+        <div id=CabeceraDocumentos class="CabeceraDocs"> 
 
           <span id="BotonSubirBajarTabla" class="lnr lnr-chevron-up"></span>
           <span id="BotonOcultarMostrar" class="lnr lnr-menu"></span>
           
-          <div id="BotonDocumentos" class="BotonesSeleccionDocumento">
-             <!-- <i class="Small material-icons">description</i> -->
-             <i class="lnr lnr-file-empty"></i> 
+          <div id="BotonDocumentos" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'Documents');" onmouseleave="borrarTooltip(this)" onclick="ActivaBoton(this)">
+            <i class="lnr lnr-file-empty"></i> 
           </div>
          
-  
-  
-          <div id="BotonEnsayos" class="BotonesSeleccionDocumento">
-            <!-- <i class="Small material-icons">beenhere</i> -->
-            <i class="lnr lnr-heart-pulse"></i>
+          <div id="BotonEnsayos" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'Essays');" onmouseleave="borrarTooltip(this)" onclick="ActivaBoton(this)">
+           <i class="lnr lnr-heart-pulse"></i>
           </div>
         
-  
-  
-  
-  
-  
-          <div id="BotonRevisiones" class="BotonesSeleccionDocumento">
-          <i class="lnr lnr-construction"></i>
+          <div id="BotonRevisiones" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'On-site checks');" onmouseleave="borrarTooltip(this)" onclick="ActivaBoton(this)">
+           <i class="lnr lnr-construction"></i>
           </div>
-         
-         
-  
-  
         </div>
         <div id="viewer-tabla">
         
@@ -185,7 +174,7 @@
       
      </div>
      
-     <script src="MisMetodos.js"></script>
+     
      <script src="MisObjetos.js"></script>
      
      <script type="text/javascript" src="materialize/js/materialize.min.js"></script>
