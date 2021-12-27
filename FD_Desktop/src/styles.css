@@ -19,6 +19,11 @@ body {
 input {
   visibility: hidden;
 }
+button{
+  color: white;
+  border: hidden;
+  box-shadow: black;
+}
 #MenuSuperior {
   z-index: 200;
   width: 100vw;
@@ -60,7 +65,8 @@ input {
   width: 100vw;
   height: 6vh;
   color: white;
-  background-color: rgb(194, 151, 171);
+  /* background-color: rgb(194, 151, 171); */
+  background-color:#e7e3e6 ;
   padding-left: 5rem;
 
   display: flex;
@@ -176,14 +182,14 @@ input {
   background-color: rgb(109, 2, 34);
   transition: width 0.2s;
   cursor: pointer;
-  width: 10rem;
+  /* width: 10rem; */
   transform: translateY(2px);
 }
 .BotonesSeleccionDocumentoActivo:hover {
   background-color: rgb(109, 2, 34);
   transition: width 0.2s;
   cursor: pointer;
-  width: 10rem;
+  /* width: 10rem; */
   transform: translateY(2px);
 }
 
@@ -222,7 +228,7 @@ input {
   transition: all 300ms;
   cursor: pointer;
   font-size: 36px;
-  color: white;
+  color: gray;
 }
 #BotonOcultarMostrar:hover {
   border-radius: 10px;
@@ -235,7 +241,7 @@ input {
   transition: all 300ms;
   cursor: pointer;
   font-size: 36px;
-  color: white;
+  color: gray;
 }
 #BotonSubirBajarTabla:hover {
   border-radius: 10px;
@@ -412,19 +418,20 @@ input {
   background-color: indigo;
 }
 .toolTip {
-  background: rgb(109, 2, 34) center left 5px no-repeat;
+  /* background: rgb(109, 2, 34) center left 5px no-repeat; */
   /* border: 2px solid #87cefa;
   border-radius: 5px;
   box-shadow: 5px 5px 5px #333; */
-  color: white;
-  font-size: 0.8em;
-  padding: 10px 10px 10px 35px;
-  margin-left: 20px;
+  color: var(--ColorPrincipal);
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  /* padding: 10px 10px 10px 35px; */
+  /* margin-left: 20px; */
 
   position: absolute;
   z-index: 100;
 
-  height: 5vh;
+  height: 3vh;
   /* font-size: 20px; */
 
   border-radius: 2.5rem;

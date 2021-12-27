@@ -54,49 +54,23 @@ function mostrarTooltip(elemento,mensaje){
         tooltip.id = "ElementoToolTip";
         tooltip.className = 'toolTip';
         tooltip.innerHTML = mensaje;
-        tooltip.style.left = x + "px";
-        tooltip.style.top = y + "px";
+        // tooltip.style.left = x + "px";
+        // tooltip.style.top = y + "px";
+        tooltip.style.marginLeft="30rem";
+        tooltip.style.marginTop="1vh";
+        const cabecera=document.getElementById("CabeceraDocumentos")
   
         // Añade el tooltip
-        document.body.appendChild(tooltip); 
+        // document.body.appendChild(tooltip); 
+        cabecera.appendChild(tooltip); 
     }
   }
-  function borrarTooltip(elemento){
-  
+function borrarTooltip(elemento){
         const ElementoABorrar=document.getElementById("ElementoToolTip");
-    
-        
         ElementoABorrar.remove();
-  
 }
 
-function ActivaBoton(Elemento,TipoDocumento) {
-    const BotonDoc=document.getElementById("BotonDocumentos");
-    const BotonEnsayo=document.getElementById("BotonEnsayos");
-    const BotonControles=document.getElementById("BotonRevisiones");
-    const ListaBotones=[BotonDoc,BotonEnsayo,BotonControles];
 
-
-
-    
-
-ListaBotones.forEach(Boton => {
-    
-    
-    if(Boton.isEqualNode(Elemento))
-    {
-       
-        Elemento.style.background = "rgb(109, 2, 34)";
-        TipoDocumentoActivo=TipoDocumento;
-      
-    }
-    else
-    {
-        Elemento.style.background = "#da1239";
-        
-    }
-});
-}
 
    
   

@@ -11,7 +11,8 @@
     "build-electron": "electron-builder",
     "build-js": "rollup -c && npm run setup-bundle",
     "setup-bundle": "node src/setup/setup.js",
-    "copy-files": "cpy node_modules/web-ifc/web-ifc.wasm wasm && cpy node_modules/web-ifc/web-ifc-mt.wasm wasm && cpy node_modules/web-ifc-three/IFCWorker.js wasm && cpy node_modules/web-ifc-three/IFCWorker.js.map wasm" 
+    "copy-files": "cpy node_modules/web-ifc/web-ifc.wasm wasm && cpy node_modules/web-ifc/web-ifc-mt.wasm wasm && cpy node_modules/web-ifc-three/IFCWorker.js wasm && cpy node_modules/web-ifc-three/IFCWorker.js.map wasm",
+    "update": "npm install web-ifc-viewer@latest && npm run copy-files"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
