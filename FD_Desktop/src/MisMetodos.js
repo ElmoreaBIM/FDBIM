@@ -69,9 +69,36 @@ function mostrarTooltip(elemento,mensaje){
         ElementoABorrar.remove();
   
 }
-function ActivaBoton(){
-    alert("activado");
+
+function ActivaBoton(Elemento,TipoDocumento) {
+    const BotonDoc=document.getElementById("BotonDocumentos");
+    const BotonEnsayo=document.getElementById("BotonEnsayos");
+    const BotonControles=document.getElementById("BotonRevisiones");
+    const ListaBotones=[BotonDoc,BotonEnsayo,BotonControles];
+
+
+
+    
+
+ListaBotones.forEach(Boton => {
+    
+    
+    if(Boton.isEqualNode(Elemento))
+    {
+       
+        Elemento.style.background = "rgb(109, 2, 34)";
+        TipoDocumentoActivo=TipoDocumento;
+      
+    }
+    else
+    {
+        Elemento.style.background = "#da1239";
+        
+    }
+});
 }
-const BotonDocs=document.getElementById("BotonDocumentos")
-// ActivaBoton(BotonDocs);
+
+   
+  
+
   

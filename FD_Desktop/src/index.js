@@ -42,6 +42,7 @@ let GUIDDelTipo;
 let BotonPlanoCortePulsado=false;
 let BotonSeleccionarPulsado=false;
 let ifcCargado;
+let TipoDocumentoActivo;
 
 let ListaNombresIFCsCargados=[];
 let ListaIfcsCargados=[];
@@ -72,18 +73,14 @@ function AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE(){
  
 }
 function AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE(){
+ 
   BotonBorrarPlanosDeCorte.onclick=()=>{
- const ListaPlanosCorte= viewer.context.getClippingPlanes();
-
- ListaPlanosCorte.forEach(Plano => {
-  alert("Hay planos : "+ListaPlanosCorte.length);
-  clip
-   viewer.context.removeClippingPlane(Plano);
-   
- });
-
+    alert("entramos");
+    IfcViewerAPI.clip 
+  };
   }
-}
+  
+
 function AÑADIR_EVENTO_AL_BOTON_SELECCIONAR(){
  
 
@@ -787,6 +784,12 @@ function MensajeAlerta() {
   if (confirm("There has been a problem, are you sure the uploaded file is an IFC?")) {
     return;
   }
+}
+function ActivaBoton(Boton){
+  Boton.click(function() {
+    Boton.removeClass("BotonesSeleccionDocumento");
+    Boton.addClass("BotonesSeleccionDocumentoActivo");
+  });
 }
 
 

@@ -10,7 +10,8 @@
     "watch": "rollup -c -w",
     "build-electron": "electron-builder",
     "build-js": "rollup -c && npm run setup-bundle",
-    "setup-bundle": "node src/setup/setup.js"
+    "setup-bundle": "node src/setup/setup.js",
+    "copy-files": "cpy node_modules/web-ifc/web-ifc.wasm wasm && cpy node_modules/web-ifc/web-ifc-mt.wasm wasm && cpy node_modules/web-ifc-three/IFCWorker.js wasm && cpy node_modules/web-ifc-three/IFCWorker.js.map wasm" 
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -28,6 +29,7 @@
     "electron-builder": "^22.14.5"
   },
   "dependencies": {
+    "cpy": "^8.1.2",
     "express": "^4.17.1",
     "fs": "0.0.1-security",
     "install": "^0.13.0",
@@ -35,7 +37,7 @@
     "materialize": "^1.0.0",
     "materialize-css": "^1.0.0-rc.2",
     "npm": "^8.3.0",
-    "web-ifc-viewer": "^1.0.105",
+    "web-ifc-viewer": "^1.0.117",
     "xml2js": "^0.4.23"
   }
 }
