@@ -785,11 +785,10 @@ function MensajeAlerta() {
     return;
   }
 }
-function ActivaBoton(Boton){
-  Boton.click(function() {
-    Boton.removeClass("BotonesSeleccionDocumento");
-    Boton.addClass("BotonesSeleccionDocumentoActivo");
-  });
-}
+
+$("BotonesSeleccionDocumento").on(function() {
+  $("BotonesSeleccionDocumento").removeClass("active");
+  $(this).addClass("active");
+});
 
 
