@@ -1,5 +1,7 @@
 import { IfcViewerAPI } from 'web-ifc-viewer';
 import { Color } from 'three';
+import { IfcViewer } from 'web-ifc-viewer';
+
 
 
 
@@ -68,7 +70,11 @@ ACTIVA_BOTON(BotonSeleccionar);
 function AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE(){
  
 
-    BotonAñadirPlanoCorte.onclick = () =>  AÑADIR_PLANO_DE_CORTE();
+    BotonAñadirPlanoCorte.onclick = () =>{
+      
+      AÑADIR_PLANO_DE_CORTE();
+
+    } 
   
  
 }
@@ -76,7 +82,13 @@ function AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE(){
  
   BotonBorrarPlanosDeCorte.onclick=()=>{
     alert("entramos");
-    IfcViewerAPI.clip 
+    if(BotonPlanoCorte.Tag===true)
+    {viewer.toggleClippingPlanes();
+      DESACTIVA_BOTON(BotonAñadirPlanoCorte);
+      DESACTIVA_BOTON(BotonPlanoCorte);
+    }
+    viewer.clipper.deleteAllPlanes();
+    
   };
   }
   
@@ -285,6 +297,11 @@ function AÑADIR_PLANO_DE_CORTE() {
      plano=viewer.addClippingPlane();
     
   }
+  else{
+    viewer.toggleClippingPlanes();
+    ACTIVA_BOTON(BotonPlanoCorte);
+  }
+ 
   return plano;
  
  
@@ -551,121 +568,120 @@ function DameDocumentosDelElemento(Ruta,IDBuscada){
    
 }
 function AñadirDocumentoATabla(Documento,Ruta){
-    const Tabla=document.getElementById("TablaDocumentos");
-    var NuevaFila = document.createElement('a');
-    NuevaFila.className='collection-item';
-    NuevaFila.href="#!";
-   
+  const Tabla=document.getElementById("TablaDocumentos");
+  var NuevaFila = document.createElement('a');
+  NuevaFila.className='collection-item';
+  NuevaFila.href="#!";
+ 
 
-    // <i class="material-icons">remove_red_eye</i>
-   
+  // <i class="material-icons">remove_red_eye</i>
+ 
 
-   
+ 
 //   NuevaFila.classList='collection-item';
-    NuevaFila.innerHTML=Documento.Nombre+" ("+Documento.Archivo+")";
-    NuevaFila.style.cursor="auto";
-    NuevaFila.style.color="#dc143c";
-    
-   
+  NuevaFila.innerHTML=Documento.Nombre+" ("+Documento.Archivo+")";
+  NuevaFila.style.cursor="auto";
+  NuevaFila.style.color="#dc143c";
+  
+ 
 
-    Tabla.appendChild(NuevaFila);
+  Tabla.appendChild(NuevaFila);
 
 
-    const NuevoSpan=document.createElement('span');
-    NuevoSpan.className='badge';
-    NuevoSpan.style.textAlign='right';
-    NuevaFila.appendChild(NuevoSpan);
-    NuevaFila.addEventListener("mouseover", function( event ) {
-        // highlight the mouseover target
-        event.target.style.fontWeight="bolder";
-        // event.target.style.backgroundColor="#ffdedb";
-        // NuevoSpan.backgroundColor="#ffdedb";
-        
-       
+  const NuevoSpan=document.createElement('span');
+  NuevoSpan.className='badge';
+  NuevoSpan.style.textAlign='right';
+  NuevaFila.appendChild(NuevoSpan);
+  NuevaFila.addEventListener("mouseover", function( event ) {
+      // highlight the mouseover target
+      event.target.style.fontWeight="bolder";
+      // event.target.style.backgroundColor="#ffdedb";
+      // NuevoSpan.backgroundColor="#ffdedb";
       
-      }, true);
-      NuevaFila.addEventListener("mouseleave", function( event ) {
-        // highlight the mouseover target
-        event.target.style.fontWeight="normal";
-        // event.target.style.backgroundColor="white";
-        // NuevoSpan.backgroundColor="white";
-        
-       
-      
-      }, true);
-
-
-      //CREAMOS ICONO CARPETA
-    const NuevoIconoCarpeta= document.createElement('i');
-    NuevoIconoCarpeta.className='material-icons';
-    NuevoIconoCarpeta.innerHTML="folder_open";
-    NuevoIconoCarpeta.style.color="#dc143c";
-      //y su tooltip
-    const CustomToolTip=document.createElement('span');
-    CustomToolTip.className='tooltiptext';
-    CustomToolTip.innerHTML="Open in folder";
-    
-    NuevoSpan.appendChild(CustomToolTip);
-    NuevoSpan.append(NuevoIconoCarpeta);
-     //y sus eventos
-    NuevoIconoCarpeta.addEventListener("mouseover", function( event ) {
-        // highlight the mouseover target
-        event.target.style.color = "white";
-        event.target.style.cursor='pointer';
-        CustomToolTip.innerHTML="View in folder";
-        CustomToolTip.style.visibility='visible';
-        
      
+    
+    }, true);
+    NuevaFila.addEventListener("mouseleave", function( event ) {
+      // highlight the mouseover target
+      event.target.style.fontWeight="normal";
+      // event.target.style.backgroundColor="white";
+      // NuevoSpan.backgroundColor="white";
       
-      }, true);
-      NuevoIconoCarpeta.addEventListener("mouseleave", function( event ) {
-        // highlight the mouseover target
-        event.target.style.color = "#dc143c";
-        CustomToolTip.style.visibility='hidden';
-      
-      }, true);
      
-      NuevoIconoCarpeta.onclick=function(){
-        const CarpetaAAbrir=Ruta+"DOCUMENTOS_ELEMENTOS\\"+GUIDDelTipo+"\\"+Documento.Archivo;
-                 
-        window.api.send("CarpetaParaAbrir",CarpetaAAbrir);
-        
-    }
+    
+    }, true);
 
-   //CREAMOS ICONO OJO
-    const Nuevoi=document.createElement('span');
-    NuevaFila.appendChild(Nuevoi);
-    const NuevoIconoOjo= document.createElement('i');
-    NuevoIconoOjo.className='material-icons';
-    NuevoIconoOjo.innerHTML="remove_red_eye";
-    NuevoIconoOjo.style.textAlign='right';
-    NuevoIconoOjo.style.color="#dc143c";
+
+    //CREAMOS ICONO CARPETA
+  const NuevoIconoCarpeta= document.createElement('i');
+  NuevoIconoCarpeta.className='material-icons';
+  NuevoIconoCarpeta.innerHTML="folder_open";
+  NuevoIconoCarpeta.style.color="#dc143c";
+    //y su tooltip
+  const CustomToolTip=document.createElement('span');
+  CustomToolTip.className='tooltiptext';
+  CustomToolTip.innerHTML="Open in folder";
+  
+  NuevoSpan.appendChild(CustomToolTip);
+  NuevoSpan.append(NuevoIconoCarpeta);
+   //y sus eventos
+  NuevoIconoCarpeta.addEventListener("mouseover", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "white";
+      event.target.style.cursor='pointer';
+      CustomToolTip.innerHTML="View in folder";
+      CustomToolTip.style.visibility='visible';
+      
    
-    NuevoIconoOjo.addEventListener("mouseover", function( event ) {
-        // highlight the mouseover target
-        event.target.style.color = "white";
-        event.target.style.cursor='pointer';
-        CustomToolTip.innerHTML="Open document";
-        CustomToolTip.style.visibility='visible';
-      
-      }, true);
-      NuevoIconoOjo.addEventListener("mouseleave", function( event ) {
-        // highlight the mouseover target
-        event.target.style.color = "#dc143c";
-        CustomToolTip.style.visibility='hidden';
-      
-      }, true);
     
-    NuevoIconoOjo.onclick=function(){
-      const DocAAbrir=Ruta+"DOCUMENTOS_ELEMENTOS\\"+GUIDDelTipo+"\\"+Documento.Archivo;
-                 
-      window.api.send("DocumentoParaAbrir",DocAAbrir);
+    }, true);
+    NuevoIconoCarpeta.addEventListener("mouseleave", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "#dc143c";
+      CustomToolTip.style.visibility='hidden';
+    
+    }, true);
+   
+    NuevoIconoCarpeta.onclick=function(){
+      const CarpetaAAbrir=Ruta+"DOCUMENTOS_ELEMENTOS\\"+GUIDDelTipo+"\\"+Documento.Archivo;
+               
+      window.api.send("CarpetaParaAbrir",CarpetaAAbrir);
       
-    }
-    NuevoSpan.append(NuevoIconoOjo);
-        
+  }
+
+ //CREAMOS ICONO OJO
+  const Nuevoi=document.createElement('span');
+  NuevaFila.appendChild(Nuevoi);
+  const NuevoIconoOjo= document.createElement('i');
+  NuevoIconoOjo.className='material-icons';
+  NuevoIconoOjo.innerHTML="remove_red_eye";
+  NuevoIconoOjo.style.textAlign='right';
+  NuevoIconoOjo.style.color="#dc143c";
+ 
+  NuevoIconoOjo.addEventListener("mouseover", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "white";
+      event.target.style.cursor='pointer';
+      CustomToolTip.innerHTML="Open document";
+      CustomToolTip.style.visibility='visible';
     
+    }, true);
+    NuevoIconoOjo.addEventListener("mouseleave", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "#dc143c";
+      CustomToolTip.style.visibility='hidden';
     
+    }, true);
+  
+  NuevoIconoOjo.onclick=function(){
+    const DocAAbrir=Ruta+"DOCUMENTOS_ELEMENTOS\\"+GUIDDelTipo+"\\"+Documento.Archivo;
+               
+    window.api.send("DocumentoParaAbrir",DocAAbrir);
+    
+  }
+  NuevoSpan.append(NuevoIconoOjo);
+      
+  
     
     
 }
