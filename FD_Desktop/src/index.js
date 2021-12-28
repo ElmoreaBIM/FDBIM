@@ -81,7 +81,7 @@ function AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE(){
 function AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE(){
  
   BotonBorrarPlanosDeCorte.onclick=()=>{
-    alert("entramos");
+    
     if(BotonPlanoCorte.Tag===true)
     {viewer.toggleClippingPlanes();
       DESACTIVA_BOTON(BotonAñadirPlanoCorte);
@@ -213,7 +213,7 @@ function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
     const found = await viewer.IFC.pickIfcItem(true);
     if (found === null || found === undefined)
       return;
-      alert(BotonAñadirPlanoCorte.Tag);
+      
   if(BotonAñadirPlanoCorte.Tag===true)
   {
        const plano = AÑADIR_PLANO_DE_CORTE();
@@ -279,7 +279,7 @@ function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
   };
 }
 function AÑADIR_PLANO_DE_CORTE() {
-  const plano=undefined;
+  let plano=undefined;
   if(BotonAñadirPlanoCorte.Tag===false || BotonAñadirPlanoCorte.Tag===undefined)
   {
     DESACTIVA_BOTON(BotonSeleccionar);
