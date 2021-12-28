@@ -1,0 +1,28 @@
+* {
+    /* padding: 0; */
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Roboto", sans-serif;
+    --ColorPrincipal: #da1239;
+    --ColorActivo: rgb(109, 2, 34)
+    --ColorApagado: #feedf1;
+    --gris: #888888;
+    --grisOscuro: #616161;
+  
+    /* line-height: 0.8; */
+  }
+  
+  html,
+  body {
+    overflow: hidden;
+  }
+  input {
+    visibility: hidden;
+  }
+  #franjaSuperior{
+      background-color: var(--ColorPrincipal);
+      width: 100vw;
+      height: 1.5rem;
+      color:white;
+      padding-left: 10rem;
+  }

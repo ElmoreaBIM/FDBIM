@@ -5,6 +5,7 @@ import { IfcViewer } from 'web-ifc-viewer';
 
 
 
+
 //AÑADIMOS ELEMENTOS DEL DOM COMO CONSTANTES
 const input = document.getElementById("file-input");
 const container = document.getElementById('viewer-container');
@@ -30,6 +31,8 @@ const BotonSeleccionar=document.getElementById("BotonSelect");
 const BotonAñadirPlanoCorte=document.getElementById("BotonAñadirPlanoCorte");
 const BotonBorrarPlanosDeCorte=document.getElementById("BotonBorrarPlanosDeCorte");
 const BotonPlanoCorte=document.getElementById("BotonPlanoCorte");
+const BotonAbrirRevisiones=document.getElementById("BotonVerRevisiones");
+
 
 
 //AÑADIMOS VARIABLES PARA LA LÓGICA
@@ -58,15 +61,31 @@ IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR();
 AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
 AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE();
 AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE();
+AÑADIR_EVENTO_AL_BOTON_VER_REVISIONES();
 AÑADIR_EVENTO_AL_BOTON_SELECCIONAR();
 AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE();
 AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO();
+AÑADE_EVENTO_MOSTRAR_TOOLTIP_AL_PASAR_POR_ENCIMA_DE_UN_BOTON(BotonAbrirRevisiones,"See on-site revisions of the element");
 AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO();
 AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
 AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES();
 ACTIVA_BOTON(BotonSeleccionar);
 
 
+
+function AÑADE_EVENTO_MOSTRAR_TOOLTIP_AL_PASAR_POR_ENCIMA_DE_UN_BOTON(Boton,TextoDelToolTip){
+
+}
+
+function AÑADIR_EVENTO_AL_BOTON_VER_REVISIONES(){
+  BotonAbrirRevisiones.onclick=()=>{
+  const VentanaRevisiones=window.open('PaginaRevisiones.html');
+  
+  
+  
+  }
+  
+}
 function AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE(){
  
 
@@ -136,7 +155,8 @@ function AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO() {
 function AÑADIR_EL_VISOR_IFC() {
   const viewer = new IfcViewerAPI({ container, backgroundColor: new Color(255, 255, 255) });
   viewer.addAxes();
-  viewer.addGrid();
+  viewer.addGrid(50,50);
+  
   return viewer;
 }
 function LeerUltimoRepo(){
@@ -308,13 +328,23 @@ function AÑADIR_PLANO_DE_CORTE() {
 }
 // Called when message received from main process
 window.api.receive("DocumentosEncontrados", (data) => {
-      console.log(`Received ${data} from main process`);
-      console.log("Recibido"+data);
+      // console.log(`Received ${data} from main process`);
+      // console.log("Recibido"+data);
       data.forEach(doc => {
-     console.log(doc.Nombre[0]+"/"+doc.Archivo[0]);
+    //  console.log(doc.Nombre[0]+"/"+doc.Archivo[0]);
      AñadirDocumentoATabla(doc,Repositorio);
      
   });
+});
+window.api.receive("EnsayosEncontrados", (data) => {
+  
+  // console.log(`Received ${data} from main process`);
+  // console.log("Recibido"+data);
+  data.forEach(doc => {
+  AñadirEnsayoATabla(doc,Repositorio);
+ 
+ 
+});
 });
 window.api.receive("GUIDDelTipo", (data) => {GUIDDelTipo=data;});
 window.api.receive("UltimoRepositorioLeido", (data) => {
@@ -431,6 +461,7 @@ function AñadirIFCAlPanel(NombreIFC, ModeloIFC){
 
   const activacion=document.createElement('div');
   activacion.classList.add('switch');
+  activacion.classList.add('white');
 
   
 
@@ -439,10 +470,12 @@ function AñadirIFCAlPanel(NombreIFC, ModeloIFC){
   const inputcheck=document.createElement('input');
   inputcheck.type="checkbox";
   inputcheck.checked="true";
+  
 
 
   const spancheck=document.createElement('span');
   spancheck.classList.add('lever');
+  
 
   
   
@@ -621,6 +654,8 @@ function AñadirDocumentoATabla(Documento,Ruta){
   const CustomToolTip=document.createElement('span');
   CustomToolTip.className='tooltiptext';
   CustomToolTip.innerHTML="Open in folder";
+  CustomToolTip.style.visibility='hidden';
+  CustomToolTip.style.marginRight="2rem";
   
   NuevoSpan.appendChild(CustomToolTip);
   NuevoSpan.append(NuevoIconoCarpeta);
@@ -675,6 +710,128 @@ function AñadirDocumentoATabla(Documento,Ruta){
   
   NuevoIconoOjo.onclick=function(){
     const DocAAbrir=Ruta+"DOCUMENTOS_ELEMENTOS\\"+GUIDDelTipo+"\\"+Documento.Archivo;
+               
+    window.api.send("DocumentoParaAbrir",DocAAbrir);
+    
+  }
+  NuevoSpan.append(NuevoIconoOjo);
+      
+  
+    
+    
+}
+function AñadirEnsayoATabla(Documento,Ruta){
+  const Tabla=document.getElementById("TablaDocumentos");
+  var NuevaFila = document.createElement('a');
+  NuevaFila.className='collection-item';
+  NuevaFila.href="#!";
+ 
+
+  // <i class="material-icons">remove_red_eye</i>
+ 
+
+ 
+//   NuevaFila.classList='collection-item';
+  NuevaFila.innerHTML=Documento.Nombre+" ("+Documento.Archivo+")";
+  NuevaFila.style.cursor="auto";
+  NuevaFila.style.color="#dc143c";
+  
+ 
+
+  Tabla.appendChild(NuevaFila);
+
+
+  const NuevoSpan=document.createElement('span');
+  NuevoSpan.className='badge';
+  NuevoSpan.style.textAlign='right';
+  NuevaFila.appendChild(NuevoSpan);
+  NuevaFila.addEventListener("mouseover", function( event ) {
+      // highlight the mouseover target
+      event.target.style.fontWeight="bolder";
+      // event.target.style.backgroundColor="#ffdedb";
+      // NuevoSpan.backgroundColor="#ffdedb";
+      
+     
+    
+    }, true);
+    NuevaFila.addEventListener("mouseleave", function( event ) {
+      // highlight the mouseover target
+      event.target.style.fontWeight="normal";
+      // event.target.style.backgroundColor="white";
+      // NuevoSpan.backgroundColor="white";
+      
+     
+    
+    }, true);
+
+
+    //CREAMOS ICONO CARPETA
+  const NuevoIconoCarpeta= document.createElement('i');
+  NuevoIconoCarpeta.className='material-icons';
+  NuevoIconoCarpeta.innerHTML="folder_open";
+  NuevoIconoCarpeta.style.color="#dc143c";
+    //y su tooltip
+  const CustomToolTip=document.createElement('span');
+  CustomToolTip.className='tooltiptext';
+  CustomToolTip.innerHTML="Open in folder";
+  CustomToolTip.style.visibility='hidden';
+  CustomToolTip.style.marginRight="2rem";
+  
+
+  
+  NuevoSpan.appendChild(CustomToolTip);
+  NuevoSpan.append(NuevoIconoCarpeta);
+   //y sus eventos
+  NuevoIconoCarpeta.addEventListener("mouseover", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "white";
+      event.target.style.cursor='pointer';
+      CustomToolTip.innerHTML="View in folder";
+      CustomToolTip.style.visibility='visible';
+      
+   
+    
+    }, true);
+    NuevoIconoCarpeta.addEventListener("mouseleave", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "#dc143c";
+      CustomToolTip.style.visibility='hidden';
+    
+    }, true);
+   
+    NuevoIconoCarpeta.onclick=function(){
+      const CarpetaAAbrir=Ruta+"ENSAYOS_ELEMENTOS\\"+GUIDDelTipo+"\\"+Documento.Archivo;
+               
+      window.api.send("CarpetaParaAbrir",CarpetaAAbrir);
+      
+  }
+
+ //CREAMOS ICONO OJO
+  const Nuevoi=document.createElement('span');
+  NuevaFila.appendChild(Nuevoi);
+  const NuevoIconoOjo= document.createElement('i');
+  NuevoIconoOjo.className='material-icons';
+  NuevoIconoOjo.innerHTML="remove_red_eye";
+  NuevoIconoOjo.style.textAlign='right';
+  NuevoIconoOjo.style.color="#dc143c";
+ 
+  NuevoIconoOjo.addEventListener("mouseover", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "white";
+      event.target.style.cursor='pointer';
+      CustomToolTip.innerHTML="Open document";
+      CustomToolTip.style.visibility='visible';
+    
+    }, true);
+    NuevoIconoOjo.addEventListener("mouseleave", function( event ) {
+      // highlight the mouseover target
+      event.target.style.color = "#dc143c";
+      CustomToolTip.style.visibility='hidden';
+    
+    }, true);
+  
+  NuevoIconoOjo.onclick=function(){
+    const DocAAbrir=Ruta+"ENSAYOS_ELEMENTOS\\"+GUIDDelTipo+"\\"+Documento.Archivo;
                
     window.api.send("DocumentoParaAbrir",DocAAbrir);
     
@@ -802,9 +959,10 @@ function MensajeAlerta() {
   }
 }
 
-$("BotonesSeleccionDocumento").on(function() {
-  $("BotonesSeleccionDocumento").removeClass("active");
-  $(this).addClass("active");
-});
+// $("BotonesSeleccionDocumento").on(function() {
+//   $("BotonesSeleccionDocumento").removeClass("active");
+//   $(this).addClass("active");
+// });
+
 
 

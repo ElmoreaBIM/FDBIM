@@ -130,7 +130,7 @@ button{
   margin-left: 59rem;
   align-items: center;
 }
-#BotonCuarto {
+#BotonVerRevisiones {
   margin-left: 63rem;
   align-items: center;
 }
@@ -287,7 +287,7 @@ button{
   padding-left: 1rem;
   /* margin-left: 0.5rem; */
 
-  padding-top: 0.2rem;
+  padding-top: 0.5rem;
   cursor: pointer;
 }
 .Encabezado:hover {
@@ -306,6 +306,9 @@ button{
   width: 20rem;
   color: black;
 }
+
+  
+
 .property-value {
   margin-right: 1rem;
   color: var(--ColorPrincipal);
@@ -414,3 +417,23 @@ button{
   border-radius: 2.5rem;
   /* padding-top: 1vh; */
 }
+
+
+
+
+
+
+
+
+
+.switch.white label .lever {
+  background-color: var(--gris);
+}
+.switch.white label input[type=checkbox]:checked+.lever {
+  background-color: #ffd3f0;
+} 
+.switch.white label input[type=checkbox]:checked+.lever:after {
+  background-color: var(--ColorPrincipal);
+}
+
+

@@ -13,6 +13,7 @@ exApp.listen(3000);
 
 let mainWindow;
 function createWindow() {
+   
     // Create the browser window.
     mainWindow = new BrowserWindow({
         width: 800,
@@ -29,6 +30,14 @@ function createWindow() {
         }
         
     })
+    // let VentanaHija=new BrowserWindow({
+    //     parent:mainWindow,
+    //     height: 600,
+    //     icon:path.join(__dirname+'/src/LOGO_FINAL_DOCS.png'),
+    //     autoHideMenuBar:true
+    // });
+    // VentanaHija.loadFile('src/PaginaRevisiones.html');
+    // VentanaHija.show();
 
     // and load the index.html of the app.
     mainWindow.maximize();
@@ -140,7 +149,7 @@ function  EnviaDocumentosDelElementoSeleccionadoAlRenderer(Carpeta,IdDelTipo)
             {
              
                  const ListaDocs=result.Datos.Documento;
-                 console.log("encontrados ",ListaDocs);
+                 
                  mainWindow.webContents.send("DocumentosEncontrados",ListaDocs);
                  mainWindow.webContents.send("GUIDDelTipo",file);
                
@@ -152,8 +161,37 @@ function  EnviaDocumentosDelElementoSeleccionadoAlRenderer(Carpeta,IdDelTipo)
         });
     });
 
+  
+    const CarpetaEnsayos=Carpeta+"ENSAYOS_ELEMENTOS";
+    
+    var files=fs.readdirSync(CarpetaEnsayos);
+    files.forEach(file => {
+        const Ruta=CarpetaEnsayos+'\\'+file;
+        const RutaDatos=Ruta+'\\'+"DATOS.xml";
+               
+        var fs = require('fs'),
+        xml2js = require('xml2js');
+    
+        var parser = new xml2js.Parser();
+        fs.readFile(RutaDatos, function(err, data) {
+           parser.parseString(data, function (err, result) {
+            
+            if(result.Datos.ID[0]===IdDelTipo)
+            {
+                 const ListaEnsayos=result.Datos.Ensayo;
+                 console.log("Ensayos encontradosListaEnsayos",ListaEnsayos);
 
-    // DameDocumentosDelElemento(RutaDatos,IdDelTipo);
+                 mainWindow.webContents.send("EnsayosEncontrados",ListaEnsayos);
+                //  mainWindow.webContents.send("GUIDDelTipo",file);
+               
+                 }
+            }
+           
+           )    
+            
+        });
+    });
+    
 }
 function AbrirCarpetaContenedora(Ruta)
 {
