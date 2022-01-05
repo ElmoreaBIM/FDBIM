@@ -142,6 +142,11 @@ canvas{
   align-items: center;
   padding-left: 0;
 }
+#BotonAislarMismoTipo {
+  margin-left: 67rem;
+  align-items: center;
+  padding-left: 0;
+}
 
 .BotonesSeleccionDocumento {
   /* margin-top: 50rem; */

@@ -35,7 +35,9 @@ const BotonSeleccionar=document.getElementById("BotonSelect");
 const BotonAñadirPlanoCorte=document.getElementById("BotonAñadirPlanoCorte");
 const BotonBorrarPlanosDeCorte=document.getElementById("BotonBorrarPlanosDeCorte");
 const BotonPlanoCorte=document.getElementById("BotonPlanoCorte");
+
 const BotonVerElementosRevisados=document.getElementById("BotonVerRevisiones");
+const BotonAislarMismoTipo = document.getElementById("BotonAislarMismoTipo");
 
 const BotonDocumentos=document.getElementById("BotonDocumentos");
 const BotonRevisiones=document.getElementById("BotonRevisiones");
@@ -83,6 +85,8 @@ AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
 AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE();
 AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE();
 AÑADIR_EVENTO_AL_BOTON_VER_ELEMENTOS_REVISADOS();
+AÑADIR_EVENTO_AL_BOTON_AISLAR_ELEMENTOS_MISMO_TIPO();
+
 AÑADIR_EVENTO_AL_BOTON_SELECCIONAR();
 
 
@@ -98,16 +102,28 @@ AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
 AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES();
 ACTIVA_BOTON(BotonSeleccionar);
 DameElCanvas();
-CanvasDelIfc.style.width='98vw';
+CanvasDelIfc.style.width='100vw';
+CanvasDelIfc.style.height='100vh'
 
 
 
 
+function AÑADIR_EVENTO_AL_BOTON_AISLAR_ELEMENTOS_MISMO_TIPO(){
+  BotonAislarMismoTipo.onclick=()=>{
+    alert("PULSADO");
+    var data = viewer.IFC.getAllItemsOfType(0,IFCBUILDINGELEMENTPROXY); 
+    // ifc.createSubset({modelID:2,ids:data,material:greenmaterial,scene:scene,removePrevious:true});
+    
 
+
+  }
+  
+}
 
 
 function AÑADE_EVENTO_AL_BOTON_VISUALIZAR_DOCUMENTOS(){
   BotonDocumentos.onclick=()=>{
+
     VaciarDocumentosEnPantalla();
   }
 
@@ -405,23 +421,38 @@ function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
     
     LimpiarTabla(Tabla);
     //MOSTRAMOS PROPIEDADES
+    
+    
+    
+
+
   
     //PROPIEDADES DE EJEMPLAR
     const props = await viewer.IFC.getProperties(found.modelID, found.id, true);
-    console.log("Propiedades del elemento:", props);
-    console.log("Familia=", props.Name);
+    
+    
+    
+    console.log("Elemento",found);
+    console.log("Propiedades ",props);
+    var data = await viewer.IFC.getAllItemsOfType(0,IfcWallStandardCase);
+    console.log(data);
+   
+    
+
+
+
     //ID EJEMPLAR DE REVIT
     const IdRevit = props.Tag.value;
-    // console.log("ID de Revit: ",IdRevit);
+    
     document.getElementById("ValorIdEjemplar").innerHTML = IdRevit;
     //ID TIPO DE REVIT
     const IdTipoRevit = props.type[0].Tag.value;
-    console.log("Propiedades de tipo= " + props.type);
-    // console.log("ID tipo de Revit: ",IdTipoRevit);
+    
+    
     document.getElementById("ValorIdTipo").innerHTML = IdTipoRevit;
     //Mostrar familia y tipo
     let FamiliaYTipo = props.Name;
-    console.log("FamiliaYTipo", FamiliaYTipo);
+    
     FamiliaYTipo = DecodeIFCString(FamiliaYTipo.value);
     const ListaSeparada = FamiliaYTipo.split(':');
     const Familia = ListaSeparada[0];
@@ -458,6 +489,8 @@ function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
 
     //  Mandamos el ID del elemento al proceso Main
     window.api.send("ElementoSeleccionado", ES);
+
+
 
   };
 }
@@ -602,7 +635,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       PanelCentral.style.height = '84vh';
       VisorIFC.style.height = '84vh';
       BarraLateralDcha.style.height = '84vh';
-      CanvasDelIfc.style.height='84vh';
+      // CanvasDelIfc.style.height='84vh';
       TablaVisible = false;
     }
     else {
@@ -610,7 +643,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       PanelCentral.style.height = '62vh';
       VisorIFC.style.height = '62vh';
       BarraLateralDcha.style.height = '62vh';
-      CanvasDelIfc.style.height='62vh';
+      // CanvasDelIfc.style.height='62vh';
       TablaVisible = true;
     }
   }, true);
@@ -621,7 +654,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       BotonSubirTabla.className = "lnr lnr-chevron-down";
       VisorIFC.style.height = '0vh';
       PanelCentral.style.height = '0vh';
-      CanvasDelIfc.style.height='0vh';
+      // CanvasDelIfc.style.height='0vh';
 
       BarraLateralDcha.style.height = '0vh';
 
@@ -636,7 +669,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       BarraLateralDcha.style.height = '62vh';
 
       VisorIFC.style.height = '62vh';
-      CanvasDelIfc.style.height='62vh';
+      // CanvasDelIfc.style.height='62vh';
       ContenedorTabla.style.height = '24vh';
       BarraLateralDcha.style.visibility = 'visible';
       VerVisor = true;
