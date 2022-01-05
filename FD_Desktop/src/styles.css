@@ -24,6 +24,9 @@ button{
   border: hidden;
 
 }
+canvas{
+  transition: all 0.8s ease-in-out;
+}
 #MenuSuperior {
   z-index: 200;
   width: 100vw;
@@ -48,8 +51,13 @@ button{
 #viewer-container {
   z-index: 10;
   position: relative;
+  
+  left: 0;
+  right: 0;
   width: 80vw;
   height: 62vh;
+ 
+
   overflow: hidden;
   transition: all 0.8s ease-in-out;
 }
@@ -71,7 +79,6 @@ button{
 
   display: flex;
   flex-direction: row;
-
   box-shadow: 2px 2px 10px #919191;
 }
 #TablaDocumentos {
@@ -101,7 +108,7 @@ button{
   font-size: 30px;
   padding-left: 0.7rem;
   padding-top: 0.5rem;
-
+  color: white;
   border-radius: 1rem;
 }
 .BotonesCentrales:hover {
@@ -133,6 +140,7 @@ button{
 #BotonVerRevisiones {
   margin-left: 63rem;
   align-items: center;
+  padding-left: 0;
 }
 
 .BotonesSeleccionDocumento {
@@ -344,7 +352,8 @@ button{
   word-wrap: break-word;
 }
 .ValorRepositorio {
-  color: blue;
+  /* background-color: yellowgreen; */
+  color: rgb(225, 0, 255);
   font-weight: normal;
   font-size: 12px;
   width: 100%;
@@ -417,6 +426,9 @@ button{
   border-radius: 2.5rem;
   /* padding-top: 1vh; */
 }
+.NumeroDocumentos{
+  color: var(--ColorPrincipal);
+}
 
 
 
@@ -424,8 +436,7 @@ button{
 
 
 
-
-
+/* COLORES DEL CHECK */
 .switch.white label .lever {
   background-color: var(--gris);
 }
@@ -437,3 +448,28 @@ button{
 }
 
 
+.new label .lever{
+  background-color: blue;
+}
+.ConceptoRevis{
+  width: 100vw;
+  background-color: white;
+  height: 2rem;
+  color:gray;
+
+  border-color: var(rgb(238, 238, 238));
+
+  border-bottom-style: solid;
+  border-bottom-width: 0.2px;
+  padding-left: 6rem;
+  
+  
+}
+.ContenedorConceptosRevisados{
+  display: flex;
+  flex-direction: column;
+  
+}
+.LineaRev{
+  font-size: 10pt !important;
+}

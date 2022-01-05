@@ -11,6 +11,7 @@ const exApp = express();
 exApp.use(express.static(__dirname + '/wasm'));
 exApp.listen(3000);
 
+
 let mainWindow;
 function createWindow() {
    
@@ -90,25 +91,25 @@ ipcMain.on("Enviando", (event, args) => {
         // Do something with file contents
       
         // Send result back to renderer process
-       console.log("Hemos recibido con una segunda orden");
+       
         
     })
 });
 ipcMain.on("ElementoSeleccionado", (event, args) => {
     
-        console.log("Hemos seleccionado el elemento ",args);
+        
     //    let Archivo=args.IDTipo+".txt";
        let IdEjemplarDelElementoSeleccionado=args.IDEjemplar;
        let IdTipoDelElementoSeleccionado=args.IDTipo;
        let CarpetaRepositorio=args.Repo;
-       console.log("Has seleccionado en el renderer el elemento ",IdEjemplarDelElementoSeleccionado+" y el repositorio es "+CarpetaRepositorio);
+       
        //AQUI RECIBIMOS EL OBJETO SELECCIONADO EN EL RENDERER O INDEX.JS
        //AHORA VAMOS A BUSCAR SI EXISTE EL DOCUMENTO EN LA CARPETA SELECCIONADA
 
 
        
-       const listaDocumentosDelElemento= EnviaDocumentosDelElementoSeleccionadoAlRenderer(CarpetaRepositorio,IdTipoDelElementoSeleccionado)
-       console.log("Resultado=", listaDocumentosDelElemento);
+       const listaDocumentosDelElemento= EnviaDocumentosDelElementoSeleccionadoAlRenderer(CarpetaRepositorio,IdTipoDelElementoSeleccionado,IdEjemplarDelElementoSeleccionado)
+       
 
     
         //  fs.readFile(Archivo,(error,data)=>{
@@ -127,7 +128,7 @@ ipcMain.on("DameUltimoRepo", (event, args) => {LeerUltimoRepositorio(args);});
     
 
 
-function  EnviaDocumentosDelElementoSeleccionadoAlRenderer(Carpeta,IdDelTipo)
+function  EnviaDocumentosDelElementoSeleccionadoAlRenderer(Carpeta,IdDelTipo,IdDelEjemplar)
 {
        
     const CarpetaDocumentos=Carpeta+"DOCUMENTOS_ELEMENTOS";
@@ -179,7 +180,7 @@ function  EnviaDocumentosDelElementoSeleccionadoAlRenderer(Carpeta,IdDelTipo)
             if(result.Datos.ID[0]===IdDelTipo)
             {
                  const ListaEnsayos=result.Datos.Ensayo;
-                 console.log("Ensayos encontradosListaEnsayos",ListaEnsayos);
+                 
 
                  mainWindow.webContents.send("EnsayosEncontrados",ListaEnsayos);
                 //  mainWindow.webContents.send("GUIDDelTipo",file);
@@ -191,11 +192,57 @@ function  EnviaDocumentosDelElementoSeleccionadoAlRenderer(Carpeta,IdDelTipo)
             
         });
     });
+
+    const CarpetaRevisiones=Carpeta+"REVISIONES_REALIZADAS";
+    
+    var files=fs.readdirSync(CarpetaRevisiones);
+    files.forEach(file => {
+        const Ruta=CarpetaRevisiones+'\\'+file;
+        const RutaDatos=Ruta+'\\'+"DATOS.xml";
+        
+        //Evitamos archivos, solo carpetas
+        const Separamos= file.split('.');
+        
+        if(Separamos.length<2)
+       {
+           
+            var fs = require('fs'),
+            xml2js = require('xml2js');
+        
+            var parser = new xml2js.Parser();
+
+            try {
+                fs.readFile(RutaDatos, function(err, data) {
+                    parser.parseString(data, function (err, result) {
+                        
+                        
+                        if(result.Datos.ID[0]===IdDelEjemplar)
+                        {
+                            const ListaRevisiones=result.Datos.Revision;
+                            mainWindow.webContents.send("GUIDDelEjemplar",file);
+                            mainWindow.webContents.send("RevisionesEncontradas",ListaRevisiones);
+                            }
+                        }
+                    
+                    )    
+                        
+                    });
+            } catch (error) {
+                console.log(error);
+                
+            }
+            
+        }
+        
+               
+        
+    });
+    
     
 }
 function AbrirCarpetaContenedora(Ruta)
 {
-    console.log("Hemos llegao al metodo abrir carpeta de ",Ruta);
+    
     const {shell} = require('electron') // deconstructing assignment
     shell.showItemInFolder(Ruta) // Show the given file in a file manager. If possible, select the file.
    
@@ -238,7 +285,7 @@ function LeerUltimoRepositorio()
                   return console.log(err);
                 }
                 mainWindow.webContents.send("UltimoRepositorioLeido",data);
-                console.log("en el archivo hemos encontrado "+data);
+                
              
                 
               });

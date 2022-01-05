@@ -9,7 +9,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap" rel="stylesheet">
+
     
+
+
+
      <!--Import Google Icon Font-->
      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
      <!--Import materialize.css-->
@@ -19,6 +23,15 @@
      <title>Final Docs BIM is other application by bimlearning.es </title>
   </head>
   <body>
+
+   
+      
+ 
+
+
+
+
+    
     <script src="MisMetodos.js"></script>
 
     <nav>
@@ -51,52 +64,37 @@
       <div id="PanelCentral">
         <div id="viewer-container"> 
        
-
+     
           <div id="Familia" class="Categoria"></div>
           <div id="Tipo" class="Categoria"></div> 
   
-          <div id="BotonSelect" class="BotonesCentrales">
+          <div id="BotonSelect" class="BotonesCentrales" onmouseover="mostrarTooltip(this,'Select element');" onmouseleave="borrarTooltip(this)" >
               <img id="BotonGafas" class="ImagenBotonCentral" src="./icon/select.png"/>
           </div>
     
-          <div id="BotonAñadirPlanoCorte" class="BotonesCentrales">
+          <div id="BotonAñadirPlanoCorte" class="BotonesCentrales" onmouseover="mostrarTooltip(this,'Add section plan');" onmouseleave="borrarTooltip(this)" >
               <img id="BotonEjes" class="ImagenBotonCentral" src="./icon/PLANODECORTE_ADD.png"/>
           </div>
           
-          <div id="BotonPlanoCorte" class="BotonesCentrales">
+
+      
+          
+          <div id="BotonPlanoCorte" class="BotonesCentrales" onmouseover="mostrarTooltip(this,'View section plans');" onmouseleave="borrarTooltip(this)" >
               <img id="BotonVerTodo" class="ImagenBotonCentral" src="./icon/PLANODECORTE_VER.png"/>
           </div>
-          <div id="BotonBorrarPlanosDeCorte" class="BotonesCentrales">
+          <div id="BotonBorrarPlanosDeCorte" class="BotonesCentrales" onmouseover="mostrarTooltip(this,'Clean section plans');" onmouseleave="borrarTooltip(this)" >
             <img id="BotonVerTodo" class="ImagenBotonCentral" src="./icon/PLANODECORTE_REMOVE.png"/>
-        </div>
-        
-        <div id="BotonVerRevisiones" class="BotonesCentrales" onmouseover="M.toast({html: 'Carga un modelo IFC para comenzar',classes:'pink lighten-2' })">
-            <img id="" class="ImagenBotonCentral" src="./icon/gafas2.png"/>
+         </div>
+               
+        <div id="BotonVerRevisiones" class="BotonesCentrales" onmouseover="mostrarTooltip(this,'View on-site reviews');" onmouseleave="borrarTooltip(this)" >
+            <!-- <img id="" class="ImagenBotonCentral" src="./icon/gafas2.png"/> -->
+            <i class="lnr lnr-construction"></i>
          
-        </div>      
-       
-
-
-       
-      
-     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        </div> 
           
+       
+          
+         
         </div>
         <div id="sidebar_right">
           <div id="BarraIconoDerecho">
@@ -170,17 +168,25 @@
           <span id="BotonSubirBajarTabla" class="lnr lnr-chevron-up"></span>
           <span id="BotonOcultarMostrar" class="lnr lnr-menu"></span>
           
-          <button type="button" id="BotonDocumentos" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'Documents');" onmouseleave="borrarTooltip(this)" >
-            <i class="lnr lnr-file-empty"></i> 
-          </button>
+            <button type="button" id="BotonDocumentos" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'Documents');" onmouseleave="borrarTooltip(this)" >
+              <i class="lnr lnr-file-empty"></i> 
+            </button>
+            <span id="NumeroDocs" class="NumeroDocumentos">(0)</span>
+          
+      
+            
+      
+          
          
           <button  type="button" id="BotonEnsayos" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'Essays');" onmouseleave="borrarTooltip(this)">
            <i class="lnr lnr-heart-pulse"></i>
           </button>
+          <span id="NumeroEnsayos" class="NumeroDocumentos">(0)</span>
         
-          <button type="button" id="BotonRevisiones" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'On-site checks');" onmouseleave="borrarTooltip(this)"">
+          <button type="button" id="BotonRevisiones" class="BotonesSeleccionDocumento" onmouseover="mostrarTooltip(this,'On-site reviews');" onmouseleave="borrarTooltip(this)"">
            <i class="lnr lnr-construction"></i>
           </button>
+          <span id="NumeroRevisiones" class="NumeroDocumentos">(0)</span>
       
 
 
@@ -196,6 +202,7 @@
               <a href="#!" class="collection-item"><span class="badge"></span>No items selected</a>
              
             </div>
+        
   
   
   

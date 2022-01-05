@@ -1,17 +1,21 @@
 import { IfcViewerAPI } from 'web-ifc-viewer';
 import { Color } from 'three';
 import { IfcViewer } from 'web-ifc-viewer';
+import {init} from 'jquery';
+
 
 
 
 
 
 //AÑADIMOS ELEMENTOS DEL DOM COMO CONSTANTES
+
 const input = document.getElementById("file-input");
 const container = document.getElementById('viewer-container');
 const BotonCargaIFC=document.getElementById("BotonCargaIFC");
 const BotonDirectorio=document.getElementById("BotonCargaCarpeta");
 const InputCarpeta= document.getElementById("input-folder");
+const ViewerTabla=document.getElementById("viewer-tabla");
 const Tabla=document.getElementById("TablaDocumentos");
 const ContenedorTabla=document.getElementById("viewer-tabla");
 const BotonOcultarTabla=document.getElementById("BotonOcultarMostrar");
@@ -31,8 +35,17 @@ const BotonSeleccionar=document.getElementById("BotonSelect");
 const BotonAñadirPlanoCorte=document.getElementById("BotonAñadirPlanoCorte");
 const BotonBorrarPlanosDeCorte=document.getElementById("BotonBorrarPlanosDeCorte");
 const BotonPlanoCorte=document.getElementById("BotonPlanoCorte");
-const BotonAbrirRevisiones=document.getElementById("BotonVerRevisiones");
+const BotonVerElementosRevisados=document.getElementById("BotonVerRevisiones");
 
+const BotonDocumentos=document.getElementById("BotonDocumentos");
+const BotonRevisiones=document.getElementById("BotonRevisiones");
+const BotonEnsayos=document.getElementById("BotonEnsayos");
+
+const ElementoNumeroDocumentos=document.getElementById("NumeroDocs");
+const ElementoNumeroEnsayos=document.getElementById("NumeroEnsayos");
+const ElementoNumeroRevisiones=document.getElementById("NumeroRevisiones");
+
+let CanvasDelIfc = undefined;
 
 
 //AÑADIMOS VARIABLES PARA LA LÓGICA
@@ -43,6 +56,7 @@ let EstadoPlegadoModelos=false;
 let EstadoPlegadoProp=false;
 let Repositorio;
 let GUIDDelTipo;
+let GUIDDelEjemplar;
 
 let BotonPlanoCortePulsado=false;
 let BotonSeleccionarPulsado=false;
@@ -52,7 +66,14 @@ let TipoDocumentoActivo;
 let ListaNombresIFCsCargados=[];
 let ListaIfcsCargados=[];
 
+let ListaRevisionesDelElementoSeleccionado=[];
+let ListaLineasRevision=[];
+
+
+
+
 const viewer = AÑADIR_EL_VISOR_IFC();
+
 LeerUltimoRepo();
 AÑADE_EVENTO_AL_BOTON_SELECCIONAR_CARPETA_REPOSITORIO();
 SELECCION_REPOSITORIO_CARPETAS();
@@ -61,24 +82,159 @@ IGUALAR_EVENTO_AL_BOTON_AÑADIR_IFC_AL_VISOR();
 AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS();
 AÑADIR_EVENTO_AL_BOTON_AÑADIR_PLANO_DE_CORTE();
 AÑADIR_EVENTO_AL_BOTON_BORRAR_PLANOS_DE_CORTE();
-AÑADIR_EVENTO_AL_BOTON_VER_REVISIONES();
+AÑADIR_EVENTO_AL_BOTON_VER_ELEMENTOS_REVISADOS();
 AÑADIR_EVENTO_AL_BOTON_SELECCIONAR();
+
+
 AÑADE_EVENTO_ACTIVA_DESACTIVA_PLANOS_DE_CORTE();
 AÑADE_EVENTO_AL_PASAR_POR_ENCIMA_DE_UN_ELEMENTO();
-AÑADE_EVENTO_MOSTRAR_TOOLTIP_AL_PASAR_POR_ENCIMA_DE_UN_BOTON(BotonAbrirRevisiones,"See on-site revisions of the element");
+
+AÑADE_EVENTO_AL_BOTON_VISUALIZAR_DOCUMENTOS();
+AÑADE_EVENTO_AL_BOTON_VISUALIZAR_ENSAYOS();
+AÑADE_EVENTO_AL_BOTON_VER_LISTADO_REVISIONES();
+
 AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO();
 AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA();
 AÑADIR_EVENTO_ANIMACION_PANELES_MODELOSIFC_Y_PANEL_PROPIEDADES();
 ACTIVA_BOTON(BotonSeleccionar);
+DameElCanvas();
+CanvasDelIfc.style.width='98vw';
 
 
 
-function AÑADE_EVENTO_MOSTRAR_TOOLTIP_AL_PASAR_POR_ENCIMA_DE_UN_BOTON(Boton,TextoDelToolTip){
+
+
+
+
+function AÑADE_EVENTO_AL_BOTON_VISUALIZAR_DOCUMENTOS(){
+  BotonDocumentos.onclick=()=>{
+    VaciarDocumentosEnPantalla();
+  }
 
 }
 
-function AÑADIR_EVENTO_AL_BOTON_VER_REVISIONES(){
-  BotonAbrirRevisiones.onclick=()=>{
+function AÑADE_EVENTO_AL_BOTON_VISUALIZAR_ENSAYOS(){
+  BotonEnsayos.onclick=()=>{
+    VaciarDocumentosEnPantalla();
+  }
+
+}
+function AÑADE_EVENTO_AL_BOTON_VER_LISTADO_REVISIONES()
+{
+  BotonRevisiones.onclick=()=>{
+    Tabla.remove();
+    VaciarDocumentosEnPantalla();
+    
+        
+    
+    const Linearevision= document.createElement("ul");
+    
+    Linearevision.classList.add("collapsible");
+    ListaLineasRevision.push(Linearevision);
+    ListaRevisionesDelElementoSeleccionado.forEach(Revision => {
+
+      console.log(Revision);
+      const Validez=DameResultadoDeRevisionEnObra(Revision);
+
+      const Linea=document.createElement("li");
+      Linearevision.appendChild(Linea);
+      
+      
+    
+      
+  
+      const DivLinea=document.createElement("div");
+      DivLinea.classList.add("LineaRev");
+      DivLinea.style.color="red";
+      DivLinea.style.background="rgb(255, 199, 199)";
+
+      if(Validez===true)
+      {
+        
+        DivLinea.style.color="green";
+        DivLinea.style.backgroundColor="rgb(250, 255, 208)";
+      }
+      DivLinea.classList.add("collapsible-header");
+      Linearevision.appendChild(DivLinea);
+      const Imagen=document.createElement("i");
+      Imagen.style.fontWeight="bold";
+      Imagen.classList.add("material-icons");
+      if(Validez===true)
+      {
+        Imagen.innerHTML="check";
+      }
+      else
+      {
+        Imagen.innerHTML="close";
+      }
+      const Fecha=document.createElement("i");
+      Fecha.style.fontSize="0,2rem";
+      const FechaSinEspacios=Revision._.replace(" ", "_");
+      Fecha.innerHTML="Check:"+FechaSinEspacios;
+      DivLinea.appendChild(Imagen);
+      DivLinea.appendChild(Fecha);
+
+      const MedallaDerecha=document.createElement("span");
+      MedallaDerecha.classList.add("badge");
+      MedallaDerecha.classList.add("new");
+      MedallaDerecha.innerHTML=Revision.ConceptoRevisado.length;
+      DivLinea.appendChild(MedallaDerecha);
+
+      ViewerTabla.appendChild(Linearevision)
+
+
+
+      //Añadimos contenedor de conceptos
+      const ContenedorConceptos=document.createElement("div");
+      ContenedorConceptos.classList.add("ContenedorConceptosRevisados");
+
+      
+
+     const ListaConceptosRevisados=Revision.ConceptoRevisado;
+
+
+     ListaConceptosRevisados.forEach(Concepto => {
+       const ConceptoRev=Concepto._;
+       const ConceptoValido=Concepto.Valido;
+
+       
+      const LineaColapsada=document.createElement("div");
+      // LineaColapsada.classList.add("collapsible-body");
+      LineaColapsada.classList.add("ConceptoRevis");
+      const LineaInterna=document.createElement("p");
+      LineaInterna.innerText=ConceptoRev+" Ok: "+ConceptoValido;
+      LineaColapsada.appendChild(LineaInterna);
+      ContenedorConceptos.appendChild(LineaColapsada);
+
+      ViewerTabla.appendChild(ContenedorConceptos);
+
+     });
+
+
+     
+      
+    });
+   
+    
+
+    
+    
+  }
+
+}
+function VaciarDocumentosEnPantalla()
+{
+  Tabla.remove();
+  ListaLineasRevision.forEach(element => {
+  element.remove();
+  });
+  ListaLineasRevision=[];
+}
+
+function AÑADIR_EVENTO_AL_BOTON_VER_ELEMENTOS_REVISADOS(){
+  
+  BotonVerElementosRevisados.onclick=()=>{
+  
   const VentanaRevisiones=window.open('PaginaRevisiones.html');
   
   
@@ -145,7 +301,9 @@ function AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO() {
       ifcCargado.name = file.name; //Le ponemos nombre
       ListaIfcsCargados.push(ifcCargado);
       PliegaDespliegaPanelModelos(PanelMod, EstadoPlegadoModelos);
-      const Lista = await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
+      // const Lista = await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].type);
+      
+      //const Lista = await viewer.IFC.getAllItemsOfType(ListaIfcsCargados[0].id,ListaIfcsCargados[0].type,false);
 
     },
 
@@ -153,9 +311,11 @@ function AÑADIR_EVENTO_AL_BOTON_CARGAR_ARCHIVO() {
   );
 }
 function AÑADIR_EL_VISOR_IFC() {
-  const viewer = new IfcViewerAPI({ container, backgroundColor: new Color(255, 255, 255) });
+  
+ const viewer = new IfcViewerAPI({ container, backgroundColor: new Color(255, 255, 255) });
   viewer.addAxes();
   viewer.addGrid(50,50);
+  
   
   return viewer;
 }
@@ -170,7 +330,7 @@ function AÑADE_IFC_SELECCIONADO_AL_PANEL_DE_MODELOS() {
     ListaNombresIFCsCargados.push(NombreIFCCargado);
 
     AñadirIFCAlPanel(NombreIFCCargado);
-    console.log("PICABLES=", viewer.context.items.pickableIfcModels);
+  
 
 
   };
@@ -226,10 +386,13 @@ if(Boton.Tag===true)
 }
 }
 function AÑADE_EVENTO_AL_SELECCIONAR_ELEMENTO() {
+
   
 
 
   container.ondblclick = async () => {
+    VaciarDocumentosEnPantalla();
+    VaciarNumeroElementos();
     const found = await viewer.IFC.pickIfcItem(true);
     if (found === null || found === undefined)
       return;
@@ -328,18 +491,24 @@ function AÑADIR_PLANO_DE_CORTE() {
 }
 // Called when message received from main process
 window.api.receive("DocumentosEncontrados", (data) => {
-      // console.log(`Received ${data} from main process`);
-      // console.log("Recibido"+data);
+
+
+      EscribirNumeroDeDocumentos(ElementoNumeroDocumentos,data.length);
       data.forEach(doc => {
     //  console.log(doc.Nombre[0]+"/"+doc.Archivo[0]);
      AñadirDocumentoATabla(doc,Repositorio);
+     
+     const Numero=data.length;
+ 
+    
+     
      
   });
 });
 window.api.receive("EnsayosEncontrados", (data) => {
   
-  // console.log(`Received ${data} from main process`);
-  // console.log("Recibido"+data);
+
+  EscribirNumeroDeDocumentos(ElementoNumeroEnsayos,data.length);
   data.forEach(doc => {
   AñadirEnsayoATabla(doc,Repositorio);
  
@@ -347,6 +516,7 @@ window.api.receive("EnsayosEncontrados", (data) => {
 });
 });
 window.api.receive("GUIDDelTipo", (data) => {GUIDDelTipo=data;});
+window.api.receive("GUIDDelEjemplar",(data) => {GUIDDelEjemplar=data;});
 window.api.receive("UltimoRepositorioLeido", (data) => {
  
  
@@ -354,6 +524,49 @@ window.api.receive("UltimoRepositorioLeido", (data) => {
   Repositorio=data;
 
 });
+window.api.receive("RevisionesEncontradas", (data) => {
+ 
+  EscribirNumeroDeDocumentos(ElementoNumeroRevisiones,data.length);
+ const ListaRevisionesEncontradas=data;
+ ListaRevisionesEncontradas.forEach(Revision => {
+   ListaRevisionesDelElementoSeleccionado.push(Revision);
+ });
+ 
+});
+function DameResultadoDeRevisionEnObra(Revision)
+{
+  let ListaConceptosRevisados=Revision.ConceptoRevisado;
+  let Resultado=true;
+  ListaConceptosRevisados.forEach(Concepto => {
+    
+    if(Concepto.Valido[0]==="NO")
+    {
+      Resultado=false;
+    }
+
+    
+  });
+  return Resultado;
+}
+function VaciarNumeroElementos(){
+ ElementoNumeroDocumentos.innerHTML="("+0+")";
+ ElementoNumeroEnsayos.innerHTML="("+0+")";
+ ElementoNumeroRevisiones.innerHTML="("+0+")";
+
+}
+
+function EscribirNumeroDeDocumentos(Elemento,NumeroElementos)
+{
+  Elemento.innerHTML="("+NumeroElementos+")";
+}
+function AbrirDocumentoDeLaRevision(Revision) {
+  const DireccionDocumento = CajetinRepositorio.innerHTML + "REVISIONES_REALIZADAS\\" + GUIDDelEjemplar + "\\" + Revision.Documento;
+
+
+  console.log(DireccionDocumento);
+
+  window.api.send("DocumentoParaAbrir", DireccionDocumento);
+}
 
 function SELECCION_REPOSITORIO_CARPETAS() {
   let Ruta = null;
@@ -389,6 +602,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       PanelCentral.style.height = '84vh';
       VisorIFC.style.height = '84vh';
       BarraLateralDcha.style.height = '84vh';
+      CanvasDelIfc.style.height='84vh';
       TablaVisible = false;
     }
     else {
@@ -396,6 +610,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       PanelCentral.style.height = '62vh';
       VisorIFC.style.height = '62vh';
       BarraLateralDcha.style.height = '62vh';
+      CanvasDelIfc.style.height='62vh';
       TablaVisible = true;
     }
   }, true);
@@ -406,6 +621,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       BotonSubirTabla.className = "lnr lnr-chevron-down";
       VisorIFC.style.height = '0vh';
       PanelCentral.style.height = '0vh';
+      CanvasDelIfc.style.height='0vh';
 
       BarraLateralDcha.style.height = '0vh';
 
@@ -420,6 +636,7 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
       BarraLateralDcha.style.height = '62vh';
 
       VisorIFC.style.height = '62vh';
+      CanvasDelIfc.style.height='62vh';
       ContenedorTabla.style.height = '24vh';
       BarraLateralDcha.style.visibility = 'visible';
       VerVisor = true;
@@ -430,7 +647,8 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
 
     if (VerLateral === true) {
       BotonMostrarOcultarBarraLateralDerecha.className = "lnr lnr-chevron-left";
-      VisorIFC.style.width = '98vw';
+       VisorIFC.style.width = '98vw';
+      //  CanvasDelIfc.style.width=VisorIFC.style.width;
 
       BarraLateralDcha.style.width = '2vw';
       VerLateral = false;
@@ -438,7 +656,8 @@ function AÑADIR_EVENTOS_ANIMACION_MOSTRAR_OCULTAR_SECCIONES_DE_PAGINA() {
     else {
       BotonMostrarOcultarBarraLateralDerecha.className = "lnr lnr-chevron-right";
       BarraLateralDcha.style.width = '20vw';
-      VisorIFC.style.width = '80vw';
+       VisorIFC.style.width = '80vw';
+      //  CanvasDelIfc.style.width=VisorIFC.style.width;
 
       VerLateral = true;
     }
@@ -958,11 +1177,33 @@ function MensajeAlerta() {
     return;
   }
 }
+function IniciaMaterializeCollapsible (){
+  // Manually make all DOM with .collapsible collapsible 
+  $('.collapsible').collapsible();
+}
 
-// $("BotonesSeleccionDocumento").on(function() {
-//   $("BotonesSeleccionDocumento").removeClass("active");
-//   $(this).addClass("active");
-// });
 
 
+
+function DameElCanvas(){
+  const ListaHijosDelViewer=container.childNodes;
+  let Resultado=undefined;
+  ListaHijosDelViewer.forEach(element => {
+    if(element.nodeName==="CANVAS")
+    {
+      
+      
+      
+      CanvasDelIfc= element;
+      
+      return;
+
+
+    }
+    
+    
+  });
+  
+
+}
 

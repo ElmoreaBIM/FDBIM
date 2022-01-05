@@ -31,7 +31,7 @@ contextBridge.exposeInMainWorld(
         },
         receive: (channel, func) => {
             //METODOS QUE ENVIAN DATOS DEL MAIN.JS AL  INDEX.JS O RENDERER
-            let validChannels = ["DocumentosEncontrados","GUIDDelTipo","UltimoRepositorioLeido","EnsayosEncontrados"];
+            let validChannels = ["DocumentosEncontrados","GUIDDelTipo","GUIDDelEjemplar","UltimoRepositorioLeido","EnsayosEncontrados","RevisionesEncontradas"];
             if (validChannels.includes(channel)) {
                 // Deliberately strip event as it includes `sender`
                 ipcRenderer.on(channel, (event, ...args) => func(...args));
